@@ -3,7 +3,7 @@
 Unofficial, typed, synchronous and asynchronous Python SDK for Chile's
 [Mercado Público APIs](https://www.chilecompra.cl/api/).
 
-> Status: alpha (`0.1.0`). The upstream services include legacy contracts and
+> Status: alpha (`0.2.0`). The upstream services include legacy contracts and
 > may add fields. Models validate known fields while preserving new ones.
 
 ## Requirements

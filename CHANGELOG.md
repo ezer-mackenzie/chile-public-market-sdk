@@ -7,6 +7,8 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-28
+
 ### Changed
 
 - Renamed public classes to explicit English sync and async names.
@@ -15,8 +17,15 @@ and the project follows [Semantic Versioning](https://semver.org/).
   modules.
 - Renamed the default ticket variable to `CHILE_PUBLIC_MARKET_TICKET`.
 - Added an explicit SDK and upstream API versioning policy.
+- Defined English field names as the model serialization format.
 
-## [0.1.0] - Unreleased
+### Added
+
+- Added an explicit public API inventory.
+- Added regression snapshots for top-level exports and sync/async signatures.
+- Added versioned upstream contract modules for ChileCompra API v1 and v2.
+
+## [0.1.0] - 2026-07-28
 
 ### Added
 

@@ -19,6 +19,7 @@ The ticket may be omitted when `CHILE_PUBLIC_MARKET_TICKET` is defined.
 
 - [Usage guide](usage.md)
 - [API reference](api.md)
+- [Public API inventory](public-api.md)
 - [Architecture and compatibility](architecture.md)
 - [Migrating from the initial API](migration.md)
 - [Versioning policy](versioning.md)

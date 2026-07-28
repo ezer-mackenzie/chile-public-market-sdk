@@ -7,6 +7,7 @@ nav:
   - Home: index.md
   - Usage: usage.md
   - API: api.md
+  - Public API: public-api.md
   - Architecture: architecture.md
   - Migration: migration.md
   - Versioning: versioning.md

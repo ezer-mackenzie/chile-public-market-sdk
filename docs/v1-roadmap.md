@@ -1,8 +1,17 @@
 # Roadmap to v1.0.0
 
-Version `0.1.0` establishes the architecture and covers every documented
-public endpoint. The following milestones are required before declaring
-`v1.0.0` stable.
+Version `0.2.0` establishes the English public API, architecture boundaries,
+serialization policy, and public-surface regression tests. The following
+milestones are required before declaring `v1.0.0` stable.
+
+## Completed in v0.2.0
+
+- English-only public classes, methods, parameters, attributes, and docs.
+- Separate synchronous and asynchronous clients and facades.
+- Versioned upstream API contracts under `api/v{version}.py`.
+- English model serialization with Spanish wire-key normalization.
+- Public API inventory and signature snapshot tests.
+- One canonical editable version source in `pyproject.toml`.
 
 ## Contract completeness
 
