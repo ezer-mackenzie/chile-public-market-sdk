@@ -1,5 +1,7 @@
 """Python SDK for Chile's Mercado Público APIs."""
 
+from importlib.metadata import PackageNotFoundError, version
+
 from .async_client import AsyncChilePublicMarketClient
 from .config import ClientConfig
 from .errors import (
@@ -33,4 +35,7 @@ __all__ = [
     "TransportError",
 ]
 
-__version__ = "0.1.0"
+try:
+    __version__ = version("mercado-publico-chile-sdk")
+except PackageNotFoundError:  # pragma: no cover - source tree without installation
+    __version__ = "0.0.0+unknown"

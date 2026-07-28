@@ -165,7 +165,11 @@ def _normalize_wire_keys(value: Any) -> Any:
 class ChilePublicMarketModel(BaseModel):
     """Base model for ChileCompra payloads."""
 
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
+    model_config = ConfigDict(
+        extra="allow",
+        populate_by_name=True,
+        serialize_by_alias=False,
+    )
 
     @model_validator(mode="before")
     @classmethod
