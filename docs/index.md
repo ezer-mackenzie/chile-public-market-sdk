@@ -1,24 +1,24 @@
-# Mercado Público Chile SDK
+# Chile Public Market SDK
 
-Cliente Python síncrono y asíncrono para todos los endpoints públicos
-documentados de Mercado Público.
+A synchronous and asynchronous Python client for every documented public
+Mercado Público endpoint.
 
-## Inicio rápido
+## Quick start
 
 ```python
 from chile_public_market_sdk import MercadoPublico
 
-with MercadoPublico(ticket="TU_TICKET") as sdk:
-    resultado = sdk.licitaciones(codigo="1509-5-L114")
-    print(resultado.listado[0].nombre)
+with MercadoPublico(ticket="YOUR_TICKET") as sdk:
+    response = sdk.get_tenders(code="1509-5-L114")
+    print(response.items[0].name)
 ```
 
-El ticket puede omitirse si existe la variable de entorno
-`MERCADO_PUBLICO_TICKET`.
+The ticket may be omitted when `MERCADO_PUBLICO_TICKET` is defined.
 
-## Referencia
+## Reference
 
-- [Guía de uso](usage.md)
-- [Referencia de API](api.md)
-- [Diseño y compatibilidad](architecture.md)
-- [Hoja de ruta hacia v1.0.0](v1-roadmap.md)
+- [Usage guide](usage.md)
+- [API reference](api.md)
+- [Architecture and compatibility](architecture.md)
+- [Migrating from the initial API](migration.md)
+- [Roadmap to v1.0.0](v1-roadmap.md)

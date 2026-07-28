@@ -1,6 +1,6 @@
-# Referencia de API
+# API reference
 
-## Clientes
+## Clients
 
 ::: chile_public_market_sdk.client.MercadoPublicoClient
     options:
@@ -12,17 +12,17 @@
       show_source: false
       members_order: source
 
-## Configuración
+## Configuration
 
 ::: chile_public_market_sdk.config.ClientConfig
 
-## Modelos
+## Models
 
 ::: chile_public_market_sdk.models
     options:
       show_source: false
 
-## Excepciones
+## Exceptions
 
 ::: chile_public_market_sdk.errors
     options:

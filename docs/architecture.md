@@ -1,14 +1,17 @@
-# Diseño y compatibilidad
+# Architecture and compatibility
 
-El SDK separa cinco responsabilidades:
+The SDK separates five responsibilities:
 
-1. `ClientConfig` resuelve configuración y ticket.
-2. El transporte encapsula `httpx` y normaliza errores HTTP.
-3. Los parsers decodifican y validan respuestas.
-4. Los modelos Pydantic representan contratos públicos.
-5. Los clientes exponen la API de dominio sync y async.
+1. `ClientConfig` resolves configuration and the ticket.
+2. The transport wraps `httpx` and normalizes HTTP errors.
+3. Parsers decode and validate responses.
+4. Pydantic models represent the public contracts.
+5. Sync and async clients expose the domain API.
 
-Los modelos usan `extra="allow"` deliberadamente. Mercado Público mantiene
-servicios legados y la guía de Compra Ágil advierte que algunos campos reales
-difieren de versiones previas de la documentación. Este comportamiento valida
-campos conocidos sin romper al consumidor cuando ChileCompra agrega datos.
+Models deliberately use `extra="allow"`. Mercado Público operates legacy
+services, and the Agile Purchase guide documents differences between earlier
+schemas and real responses. This policy validates known fields without
+breaking consumers when ChileCompra adds data.
+
+The Python API is English-only. Spanish names remain internally where required
+by upstream endpoint paths, query parameters, enum values, and JSON keys.

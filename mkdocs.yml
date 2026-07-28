@@ -1,14 +1,15 @@
-site_name: Mercado Público Chile SDK
-site_description: SDK Python tipado para las APIs públicas de Mercado Público.
+site_name: Chile Public Market SDK
+site_description: Typed Python SDK for Chile's Mercado Público APIs.
 repo_url: https://github.com/eliezer/chile-public-market-sdk
 theme:
   name: material
 nav:
-  - Inicio: index.md
-  - Uso: usage.md
+  - Home: index.md
+  - Usage: usage.md
   - API: api.md
-  - Arquitectura: architecture.md
-  - Hacia v1.0.0: v1-roadmap.md
+  - Architecture: architecture.md
+  - Migration: migration.md
+  - Roadmap to v1.0.0: v1-roadmap.md
 plugins:
   - search
   - mkdocstrings:

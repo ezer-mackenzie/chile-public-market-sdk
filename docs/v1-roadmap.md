@@ -1,37 +1,42 @@
-# Hoja de ruta hacia v1.0.0
+# Roadmap to v1.0.0
 
-La versión `0.1.0` establece la arquitectura y cubre los endpoints públicos
-documentados. Para declarar estabilidad `v1.0.0` faltan los siguientes hitos.
+Version `0.1.0` establishes the architecture and covers every documented
+public endpoint. The following milestones are required before declaring
+`v1.0.0` stable.
 
-## Contrato
+## Contract completeness
 
-- Validar fixtures anonimizados obtenidos con un ticket real para cada endpoint.
-- Completar campos tipados de los payloads detallados de licitación y orden de compra.
-- Crear pruebas de contrato periódicas contra producción sin publicar el ticket.
-- Definir por escrito qué cambios constituyen ruptura de compatibilidad.
+- Validate anonymized real-service fixtures for every endpoint.
+- Fully type detailed tender and purchase-order payloads.
+- Run periodic contract tests without exposing the ticket.
+- Document what constitutes a breaking change.
 
-## Resiliencia
+## Reliability
 
-- Definir una política de reintentos opt-in para 429, 500 y 503.
-- Exponer métricas o hooks de observabilidad sin incluir el ticket.
-- Probar timeouts, desconexiones y respuestas no JSON.
+- Define an opt-in retry policy for HTTP 429, 500, and 503.
+- Expose observability hooks that always redact the ticket.
+- Test timeouts, disconnects, malformed JSON, and upstream schema drift.
 
-## Compatibilidad
+## Compatibility
 
-- Ejecutar CI en Python 3.12, 3.13 y 3.14.
-- Probar el wheel en Linux, macOS y Windows.
-- Mantener una matriz de payloads históricos de API v1.
+- Run CI on Python 3.12, 3.13, and 3.14.
+- Test wheels on Linux, macOS, and Windows.
+- Maintain a fixture matrix for historical v1 payload shapes.
 
-## Distribución
+## Distribution
 
-- Confirmar disponibilidad del nombre en PyPI.
-- Configurar publicación confiable (Trusted Publishing).
-- Añadir changelog y automatización de releases firmados.
-- Publicar documentación versionada.
+- Confirm the distribution name on PyPI.
+- Configure Trusted Publishing.
+- Add a changelog and signed or provenance-attested releases.
+- Publish versioned documentation.
 
-## Calidad y gobierno
+## Quality and governance
 
-- Alcanzar al menos 90% de cobertura, especialmente en el cliente asíncrono.
-- Revisar API pública, nombres y docstrings antes de congelarla.
-- Establecer soporte, deprecaciones y tiempos de respuesta de seguridad.
-- Confirmar licencia y atribución del proyecto.
+- Reach at least 90% coverage, especially in the async client.
+- Review and freeze all public names and docstrings.
+- Publish support and deprecation policies.
+- Complete license, attribution, and security reviews.
+
+The detailed engineering roadmap and release gates are maintained outside the
+repository at `/tmp/chile-public-market-sdk-v1-roadmap.md` during this planning
+cycle.

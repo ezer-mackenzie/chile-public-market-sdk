@@ -1,25 +1,27 @@
-# Guía de uso
+# Usage guide
 
-## Autenticación
+## Authentication
 
-La API v1 envía el ticket como query parameter y Compra Ágil v2 lo envía en el
-header `ticket`. El SDK aplica automáticamente el mecanismo correcto.
+The v1 API sends the ticket as a query parameter, while Agile Purchase v2
+sends it in the `ticket` header. The SDK selects the correct mechanism.
 
-La aplicación consumidora debe proporcionar el secreto:
+The consumer application owns and supplies the secret:
 
 ```python
+from chile_public_market_sdk import MercadoPublico
+
 sdk = MercadoPublico(ticket=secret_manager.get("mercado-publico"))
 ```
 
-También puede usar una variable con nombre personalizado:
+A custom environment variable is also supported:
 
 ```python
 from chile_public_market_sdk import ClientConfig, MercadoPublico
 
-sdk = MercadoPublico(config=ClientConfig(ticket_env="MI_TICKET"))
+sdk = MercadoPublico(config=ClientConfig(ticket_env="MY_TICKET"))
 ```
 
-## Cliente HTTP personalizado
+## Custom HTTP client
 
 ```python
 import httpx
@@ -33,23 +35,24 @@ http_client = httpx.Client(
 sdk = MercadoPublico(ticket="...", http_client=http_client)
 ```
 
-Cuando se inyecta un cliente HTTP, quien lo crea conserva la responsabilidad
-de cerrarlo.
+When an HTTP client is injected, its creator remains responsible for closing
+it.
 
-## Filtros de API v1
+## V1 filters
 
-`licitaciones` y `ordenes_de_compra` aceptan `codigo`, `fecha`, `estado`,
-`codigo_organismo` y `codigo_proveedor`. Una consulta por código no se combina
-con otros filtros porque representa el endpoint lógico de detalle.
+`get_tenders` and `get_purchase_orders` accept `code`, `date`, `status`,
+`buyer_code`, and `supplier_code`. A lookup by code cannot be combined with
+other filters because it represents the logical detail operation.
 
-## Compra Ágil
+## Agile Purchase
 
-`compras_agiles` valida las restricciones oficiales:
+`get_agile_purchases` enforces the official constraints:
 
-- `ttl_cambio_ms` es incompatible con el rango `cambio_desde`/`cambio_hasta`.
-- `id` y `q` son mutuamente excluyentes.
-- el tamaño de página está entre 1 y 50;
-- los códigos de región están entre 1 y 16.
+- `last_change_ttl_ms` cannot be combined with `changed_from` or
+  `changed_until`;
+- `external_id` and `query` are mutually exclusive;
+- `page_size` must be between 1 and 50;
+- region codes must be between 1 and 16.
 
-La API no soporta filtrar Compra Ágil por organismo. Debes filtrar localmente
-por `item.institucion.rut` o `item.institucion.organismo_comprador`.
+The Agile Purchase API cannot filter by buyer organization. Filter locally
+using `item.institution.tax_id` or `item.institution.buyer_organization`.

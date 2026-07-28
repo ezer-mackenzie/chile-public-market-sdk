@@ -1,43 +1,43 @@
-# Mercado Público Chile SDK
+# Chile Public Market SDK
 
-SDK no oficial, tipado, síncrono y asíncrono para las APIs públicas de
-[Mercado Público de Chile](https://www.chilecompra.cl/api/).
+Unofficial, typed, synchronous and asynchronous Python SDK for Chile's
+[Mercado Público APIs](https://www.chilecompra.cl/api/).
 
-> Estado: alpha (`0.1.0`). La API upstream contiene contratos legados y puede
-> agregar campos; los modelos validan los campos conocidos y conservan los adicionales.
+> Status: alpha (`0.1.0`). The upstream services include legacy contracts and
+> may add fields. Models validate known fields while preserving new ones.
 
-## Requisitos
+## Requirements
 
-- Python 3.12 o superior.
-- Un ticket de acceso solicitado en el sitio de ChileCompra.
+- Python 3.12 or newer.
+- An access ticket requested through ChileCompra.
 
-## Instalación
+## Installation
 
 ```bash
 pip install mercado-publico-chile-sdk
 ```
 
-## Configuración segura
+## Secure configuration
 
-El SDK no incluye ni administra tickets. Puedes entregarlo explícitamente:
+The SDK never includes or manages tickets. Pass one explicitly:
 
 ```python
 from chile_public_market_sdk import MercadoPublico
 
-sdk = MercadoPublico(ticket="TU_TICKET")
+sdk = MercadoPublico(ticket="YOUR_TICKET")
 ```
 
-O mediante la variable `MERCADO_PUBLICO_TICKET`:
+Or define `MERCADO_PUBLICO_TICKET`:
 
 ```bash
-export MERCADO_PUBLICO_TICKET="TU_TICKET"
+export MERCADO_PUBLICO_TICKET="YOUR_TICKET"
 ```
 
-Los archivos `.env` están ignorados por Git. Cargarlos con Docker Compose,
-Kubernetes, `env.yaml`, `python-dotenv` u otro gestor es responsabilidad de la
-aplicación consumidora.
+Git ignores `.env` and `env.yaml`. Loading them through Docker Compose,
+Kubernetes, `python-dotenv`, or another secret-management mechanism is the
+consumer application's responsibility.
 
-## Uso síncrono
+## Synchronous usage
 
 ```python
 from datetime import date
@@ -46,19 +46,19 @@ from chile_public_market_sdk import MercadoPublico
 from chile_public_market_sdk.enums import TenderStatus
 
 with MercadoPublico() as sdk:
-    resultado = sdk.licitaciones(
-        fecha=date(2026, 6, 12),
-        estado=TenderStatus.PUBLISHED,
+    response = sdk.get_tenders(
+        date=date(2026, 6, 12),
+        status=TenderStatus.PUBLISHED,
     )
-    for licitacion in resultado.listado:
-        print(licitacion.codigo_externo, licitacion.nombre)
+    for tender in response.items:
+        print(tender.external_code, tender.name)
 
-    orden = sdk.ordenes_de_compra(codigo="2097-241-SE14")
-    proveedor = sdk.buscar_proveedor("70.017.820-k")
-    compradores = sdk.compradores()
+    order = sdk.get_purchase_orders(code="2097-241-SE14")
+    supplier = sdk.find_supplier("70.017.820-k")
+    buyers = sdk.get_buyers()
 ```
 
-## Uso asíncrono
+## Asynchronous usage
 
 ```python
 import asyncio
@@ -69,55 +69,55 @@ from chile_public_market_sdk.enums import AgilePurchaseStatus
 
 async def main() -> None:
     async with AsyncMercadoPublico() as sdk:
-        pagina = await sdk.compras_agiles(
-            ttl_cambio_ms=300_000,
-            estados=[AgilePurchaseStatus.PUBLISHED],
-            tamano_pagina=50,
+        page = await sdk.get_agile_purchases(
+            last_change_ttl_ms=300_000,
+            statuses=[AgilePurchaseStatus.PUBLISHED],
+            page_size=50,
         )
-        detalle = await sdk.compra_agil(pagina.items[0].codigo)
-        print(detalle.nombre)
+        detail = await sdk.get_agile_purchase(page.items[0].code)
+        print(detail.name)
 
 
 asyncio.run(main())
 ```
 
-## Cobertura de endpoints
+## Endpoint coverage
 
-| Recurso | Métodos del SDK | API |
+| Resource | SDK method | API |
 |---|---|---|
-| Licitaciones | `licitaciones` | v1 |
-| Órdenes de compra | `ordenes_de_compra` | v1 |
-| Proveedores | `buscar_proveedor` | v1 |
-| Organismos compradores | `compradores` | v1 |
-| Compra Ágil, listado y filtros | `compras_agiles` | v2 |
-| Compra Ágil, detalle | `compra_agil` | v2 |
+| Tenders | `get_tenders` | v1 |
+| Purchase orders | `get_purchase_orders` | v1 |
+| Suppliers | `find_supplier` | v1 |
+| Buyer organizations | `get_buyers` | v1 |
+| Agile Purchase listing and filters | `get_agile_purchases` | v2 |
+| Agile Purchase details | `get_agile_purchase` | v2 |
 
-Los filtros de fecha aceptan `date` o el formato original `ddmmaaaa` en v1.
-Compra Ágil acepta fechas ISO-8601, estados y regiones múltiples, paginación y
-ordenamiento.
+V1 date filters accept a `date` or the original `ddmmyyyy` format. Agile
+Purchase accepts ISO-8601 dates, multiple statuses and regions, pagination,
+and sorting.
 
-## Errores
+## Errors
 
-Todas las excepciones heredan de `MercadoPublicoError`:
+Every public exception inherits from `MercadoPublicoError`:
 
-- `ConfigurationError`: falta el ticket.
-- `RequestValidationError`: filtros incompatibles o inválidos.
-- `AuthenticationError`: respuesta 401 o 403.
-- `NotFoundError`: respuesta 404.
-- `RateLimitError`: respuesta 429; expone `retry_after`.
-- `APIError`: otros errores de la API.
-- `TransportError`: red, DNS o timeout.
-- `ResponseValidationError`: JSON inválido o contrato inesperado.
+- `ConfigurationError`: no ticket was supplied.
+- `RequestValidationError`: incompatible or invalid filters.
+- `AuthenticationError`: HTTP 401 or 403.
+- `NotFoundError`: HTTP 404.
+- `RateLimitError`: HTTP 429; exposes `retry_after`.
+- `APIError`: any other API error.
+- `TransportError`: network, DNS, or timeout failure.
+- `ResponseValidationError`: invalid JSON or an unexpected contract.
 
-## Desarrollo
+## Development
 
 ```bash
-poetry install --with dev,docs
+poetry install --extras "dev docs"
 poetry run pytest
 poetry run ruff check .
 poetry run mypy
 poetry build
 ```
 
-Consulta [CONTRIBUTING.md](CONTRIBUTING.md) y [SECURITY.md](SECURITY.md) antes
-de enviar cambios o reportar vulnerabilidades.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md) before
+submitting changes or reporting vulnerabilities.
