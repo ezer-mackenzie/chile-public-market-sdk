@@ -22,11 +22,15 @@ class CompanyResponse(ChilePublicMarketModel):
     @classmethod
     def normalize_shape(cls, value: Any) -> Any:
         normalized = _normalize_wire_keys(value)
+
         if isinstance(normalized, list):
             return {"companies": normalized}
+
         if isinstance(normalized, dict):
             if "companies" in normalized:
                 return normalized
+
             if "company_code" in normalized:
                 return {"companies": [normalized]}
+
         return normalized

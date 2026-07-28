@@ -1,0 +1,240 @@
+{
+  "success": "OK",
+  "trace": null,
+  "payload": {
+    "codigo": "3377-112-COT26",
+    "nombre": "Redacted",
+    "descripcion": "Redacted",
+    "estado": {
+      "id_estado": 2,
+      "codigo": "publicada",
+      "glosa": "Publicada"
+    },
+    "convocatoria": {
+      "estado_convocatoria": 1,
+      "descripcion": "Redacted",
+      "fecha_cierre_primer_llamado": "2026-07-29 10:00",
+      "fecha_cierre_segundo_llamado": "2026-07-30 18:37"
+    },
+    "fechas": {
+      "fecha_publicacion": "2026-07-28 01:22",
+      "fecha_cierre": "2026-07-29 10:00",
+      "fecha_ultimo_cambio": "2026-07-28 01:25",
+      "fecha_cancelacion": null
+    },
+    "entrega": {
+      "direccion_entrega": "Redacted",
+      "plazo_entrega_dias": 4
+    },
+    "documentos": [],
+    "presupuesto": {
+      "tipo_presupuesto": "Estimado",
+      "moneda": "CLP",
+      "presupuesto_estimado": 2500000,
+      "monto_disponible": 2500000,
+      "monto_disponible_clp": 2500000,
+      "valor_cambio_moneda": null,
+      "fecha_cambio_moneda": null
+    },
+    "id_orden_compra": null,
+    "institucion": {
+      "organismo_comprador": "Ejercito de Chile",
+      "rut": "00.000.000-0",
+      "unidad_compra": "Regimiento Logístico del Ejército Nº 3 Limache",
+      "region": 13,
+      "nombre_region": "Región Metropolitana de Santiago"
+    },
+    "productos_solicitados": [
+      {
+        "codigo_producto": 30102417,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 10,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 30181513,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 4,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 30102206,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 1,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 31211501,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 2,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 31211904,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 3,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 31161606,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 1,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 30171514,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 3,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 12352310,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 15,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 30102316,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 12,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 31161503,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 3,
+        "unidad_medida": "KGM"
+      },
+      {
+        "codigo_producto": 30102206,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 4,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 39121506,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 1,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 39121311,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 4,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 39121402,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 5,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 31162808,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 1,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 30171504,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 1,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 30102505,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 5,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 39121311,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 2,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 31211501,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 1,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 26121634,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 2,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 26121634,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 2,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 26121634,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 2,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 31162906,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 5,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 31201502,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 2,
+        "unidad_medida": "EA"
+      },
+      {
+        "codigo_producto": 39121409,
+        "nombre": "Redacted",
+        "descripcion": "Redacted",
+        "cantidad": 2,
+        "unidad_medida": "EA"
+      }
+    ],
+    "proveedores_cotizando": [],
+    "resumen": {
+      "multa_sancion": 1,
+      "total_ofertas_recibidas": 2,
+      "total_demandas": 0
+    },
+    "motivos": {
+      "motivo_cancelacion": null,
+      "motivo_desierta": null
+    },
+    "flags": {
+      "considera_requisitos_medioambientales": false,
+      "considera_requisitos_impacto_social_economico": false
+    }
+  },
+  "errors": null
+}

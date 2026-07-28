@@ -1,0 +1,14 @@
+{
+  "Cantidad": 2,
+  "FechaCreacion": "2026-07-28T08:28:16.0458112Z",
+  "listaEmpresas": [
+    {
+      "CodigoEmpresa": "REDACTED-CODE",
+      "NombreEmpresa": "Redacted"
+    },
+    {
+      "CodigoEmpresa": "REDACTED-CODE",
+      "NombreEmpresa": "Redacted"
+    }
+  ]
+}

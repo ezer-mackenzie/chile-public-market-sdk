@@ -158,8 +158,8 @@ class SyncChilePublicMarketClient:
             )
         if external_id and query:
             raise RequestValidationError("external_id and query are mutually exclusive.")
-        if not 1 <= page_size <= 50:
-            raise RequestValidationError("page_size must be between 1 and 50.")
+        if not 10 <= page_size <= 50:
+            raise RequestValidationError("page_size must be between 10 and 50.")
         if page_number < 1:
             raise RequestValidationError("page_number must be greater than or equal to 1.")
         region_values = list(regions) if regions is not None else None

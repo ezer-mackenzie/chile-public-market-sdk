@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   pull_request:
+  schedule:
+    - cron: "17 9 * * 1"
 
 permissions:
   contents: read
@@ -28,3 +30,8 @@ jobs:
       - run: poetry build
       - if: matrix.python-version == '3.12'
         run: poetry run mkdocs build --strict
+      - if: github.event_name == 'schedule' && matrix.python-version == '3.12'
+        env:
+          CHILE_PUBLIC_MARKET_TICKET: ${{ secrets.CHILE_PUBLIC_MARKET_TICKET }}
+          RUN_LIVE_CONTRACT_TESTS: "1"
+        run: poetry run pytest -m live

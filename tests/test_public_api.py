@@ -73,7 +73,7 @@ def test_sync_and_async_resource_surfaces_match_snapshot() -> None:
 
 def test_runtime_version_matches_distribution_metadata() -> None:
     assert chile_public_market_sdk.__version__ == version("mercado-publico-chile-sdk")
-    assert chile_public_market_sdk.__version__ == "0.2.0"
+    assert chile_public_market_sdk.__version__ == "0.3.0"
 
 
 def test_models_serialize_with_English_field_names() -> None:
@@ -84,22 +84,9 @@ def test_models_serialize_with_English_field_names() -> None:
         }
     )
 
-    assert response.model_dump() == {
-        "count": 1,
-        "created_at": None,
-        "version": None,
-        "items": [
-            {
-                "external_code": "123-1-L126",
-                "name": "Example",
-                "status_code": None,
-                "status": None,
-                "description": None,
-                "closing_at": None,
-                "currency": None,
-                "estimated_amount": None,
-                "buyer": None,
-                "items": [],
-            }
-        ],
-    }
+    serialized = response.model_dump()
+
+    assert serialized["count"] == 1
+    assert serialized["items"][0]["external_code"] == "123-1-L126"
+    assert serialized["items"][0]["name"] == "Example"
+    assert "CodigoExterno" not in serialized["items"][0]

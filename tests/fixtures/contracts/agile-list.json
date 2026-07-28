@@ -1,0 +1,59 @@
+{
+  "success": "OK",
+  "trace": null,
+  "payload": {
+    "items": [
+      {
+        "codigo": "3377-112-COT26",
+        "nombre": "Redacted",
+        "estado": {
+          "id_estado": 2,
+          "codigo": "publicada",
+          "glosa": "Publicada"
+        },
+        "convocatoria": {
+          "estado_convocatoria": 1,
+          "descripcion": "Redacted"
+        },
+        "documentos": [],
+        "fechas": {
+          "fecha_publicacion": "2026-07-28 01:22",
+          "fecha_cierre": "2026-07-29 10:00",
+          "fecha_ultimo_cambio": "2026-07-28T01:25:00.363Z",
+          "fecha_cierre_primer_llamado": "2026-07-29T10:00:00Z",
+          "fecha_cierre_segundo_llamado": "2026-07-30T18:37:34.260Z"
+        },
+        "montos": {
+          "moneda": "CLP",
+          "monto_disponible": 2500000,
+          "monto_disponible_clp": 2500000
+        },
+        "institucion": {
+          "organismo_comprador": "Ejercito de Chile",
+          "rut": "00.000.000-0",
+          "unidad_compra": "Regimiento Logístico del Ejército Nº 3 Limache",
+          "region": 13,
+          "nombre_region": "Región Metropolitana de Santiago"
+        },
+        "resumen": {
+          "total_ofertas_recibidas": 0
+        },
+        "motivos": {
+          "motivo_cancelacion": null,
+          "motivo_desierta": null,
+          "motivo_seleccion": null
+        },
+        "links": {
+          "detalle": "/v2/compra-agil/3377-112-COT26"
+        }
+      }
+    ],
+    "paginacion": {
+      "total_paginas": 1000,
+      "numero_pagina": 1,
+      "tamano_pagina": 10,
+      "total_resultados": 1
+    }
+  },
+  "errors": null
+}

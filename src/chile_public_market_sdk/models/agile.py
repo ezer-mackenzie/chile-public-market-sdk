@@ -182,7 +182,7 @@ class AgilePurchaseDetail(ChilePublicMarketModel):
     delivery: AgileDelivery
     documents: list[AgileDocument] = Field(default_factory=list)
     budget: AgileBudget
-    purchase_order: AgilePurchaseOrderReference
+    purchase_order: AgilePurchaseOrderReference | None = None
     institution: AgileInstitution
     requested_products: list[AgileRequestedProduct] = Field(default_factory=list)
     quoting_suppliers: list[AgileQuote] = Field(default_factory=list)

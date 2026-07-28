@@ -1,0 +1,94 @@
+{
+  "Cantidad": 1,
+  "FechaCreacion": "2026-07-28T08:28:15.9464417Z",
+  "Version": "v1",
+  "Listado": [
+    {
+      "Codigo": "2097-241-SE14",
+      "Nombre": "Redacted",
+      "CodigoEstado": 6,
+      "Estado": "Aceptada",
+      "CodigoLicitacion": "2097-165-L113",
+      "Descripcion": "Redacted",
+      "CodigoTipo": "8",
+      "Tipo": "SE",
+      "TipoMoneda": "CLP",
+      "CodigoEstadoProveedor": 4,
+      "EstadoProveedor": "Aceptada",
+      "Fechas": {
+        "FechaCreacion": "2014-01-30T09:00:01.96",
+        "FechaEnvio": "2014-01-30T09:36:28",
+        "FechaAceptacion": "2014-02-02T23:58:56.63",
+        "FechaCancelacion": null,
+        "FechaUltimaModificacion": "2014-01-30T09:11:00"
+      },
+      "TieneItems": "1",
+      "PromedioCalificacion": 3.933333333333333,
+      "CantidadEvaluacion": 6,
+      "Descuentos": 0.0,
+      "Cargos": 0.0,
+      "TotalNeto": 35000.0,
+      "PorcentajeIva": 19.0,
+      "Impuestos": 6650.0,
+      "Total": 41650.0,
+      "Financiamiento": "",
+      "Pais": "CL",
+      "TipoDespacho": "7",
+      "FormaPago": "2",
+      "Comprador": {
+        "CodigoOrganismo": "REDACTED-CODE",
+        "NombreOrganismo": "Redacted",
+        "RutUnidad": "00.000.000-0",
+        "CodigoUnidad": "REDACTED-CODE",
+        "NombreUnidad": "Redacted",
+        "Actividad": "",
+        "DireccionUnidad": "Redacted",
+        "ComunaUnidad": "Redacted",
+        "RegionUnidad": "Redacted",
+        "Pais": "CL",
+        "NombreContacto": "Redacted",
+        "CargoContacto": "Redacted",
+        "FonoContacto": "Redacted",
+        "MailContacto": "redacted@example.invalid"
+      },
+      "Proveedor": {
+        "Codigo": "1316979",
+        "Nombre": "Redacted",
+        "Actividad": "VENTA AL POR MAYOR DE OTROS PRODUCTOS N.C.P.| VENT",
+        "CodigoSucursal": "REDACTED-CODE",
+        "NombreSucursal": "Redacted",
+        "RutSucursal": "00.000.000-0",
+        "Direccion": "Redacted",
+        "Comuna": "Redacted",
+        "Region": "Redacted",
+        "Pais": "CL",
+        "NombreContacto": "Redacted",
+        "CargoContacto": "Redacted",
+        "FonoContacto": "Redacted",
+        "MailContacto": "redacted@example.invalid"
+      },
+      "Items": {
+        "Cantidad": 1,
+        "Listado": [
+          {
+            "Correlativo": 1,
+            "CodigoCategoria": 30201900,
+            "Categoria": "Artículos para estructuras, obras y construcciones / Estructuras prefabricadas / Construcciones médicas prefabricadas",
+            "CodigoProducto": 30201903,
+            "Producto": "Unidades dentales",
+            "EspecificacionComprador": "Ultracal",
+            "EspecificacionProveedor": " Ultracal.ULTRADENT. PRODUCTO AMERICANO. JERINGA 3 GRS. KIT X 4 UNIDADES.  FECHA DE VENCIMIENTO 2018. SE ADJUNTA CATALOGO DE PRODUCTO. INCLUY FLETE. DESPACHO 24 HRS. PUESTO EN BODEGAS DE HOSPITAL DE ARAUCO.",
+            "Cantidad": 1.0,
+            "Unidad": null,
+            "Moneda": "CLP",
+            "PrecioNeto": 35000.0,
+            "TotalCargos": 0.0,
+            "TotalDescuentos": 0.0,
+            "TotalImpuestos": 0.0,
+            "Total": 35000.0
+          }
+        ]
+      }
+    }
+  ]
+}

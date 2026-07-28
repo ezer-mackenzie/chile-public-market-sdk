@@ -1,0 +1,189 @@
+{
+  "Cantidad": 1,
+  "FechaCreacion": "2026-07-28T08:28:15.8582926Z",
+  "Version": "v1",
+  "Listado": [
+    {
+      "CodigoExterno": "REDACTED-CODE",
+      "Nombre": "Redacted",
+      "CodigoEstado": 8,
+      "Descripcion": "Redacted",
+      "FechaCierre": null,
+      "Estado": "Adjudicada",
+      "Comprador": {
+        "CodigoOrganismo": "REDACTED-CODE",
+        "NombreOrganismo": "Redacted",
+        "RutUnidad": "00.000.000-0",
+        "CodigoUnidad": "REDACTED-CODE",
+        "NombreUnidad": "Redacted",
+        "DireccionUnidad": "Redacted",
+        "ComunaUnidad": "Redacted",
+        "RegionUnidad": "Redacted",
+        "RutUsuario": "00.000.000-0",
+        "CodigoUsuario": "REDACTED-CODE",
+        "NombreUsuario": "Redacted",
+        "CargoUsuario": "Redacted"
+      },
+      "DiasCierreLicitacion": "0",
+      "Informada": 0,
+      "CodigoTipo": 1,
+      "Tipo": "L1",
+      "TipoConvocatoria": "1",
+      "Moneda": "CLP",
+      "Etapas": 1,
+      "EstadoEtapas": "1",
+      "TomaRazon": "0",
+      "EstadoPublicidadOfertas": 1,
+      "JustificacionPublicidad": "",
+      "Contrato": "0",
+      "Obras": "0",
+      "CantidadReclamos": 117,
+      "Fechas": {
+        "FechaCreacion": "2014-01-20T09:52:56.653",
+        "FechaCierre": "2014-01-27T15:54:00",
+        "FechaInicio": "2014-01-20T15:54:00",
+        "FechaFinal": "2014-01-23T15:54:00",
+        "FechaPubRespuestas": "2014-01-24T15:54:00",
+        "FechaActoAperturaTecnica": "2014-01-27T15:55:00",
+        "FechaActoAperturaEconomica": "2014-01-27T15:55:00",
+        "FechaPublicacion": "2014-01-20T10:00:17.173",
+        "FechaAdjudicacion": "2014-02-02T15:42:13.133",
+        "FechaEstimadaAdjudicacion": "2014-01-31T15:55:00",
+        "FechaSoporteFisico": null,
+        "FechaTiempoEvaluacion": null,
+        "FechaEstimadaFirma": null,
+        "FechasUsuario": null,
+        "FechaVisitaTerreno": null,
+        "FechaEntregaAntecedentes": null
+      },
+      "UnidadTiempoEvaluacion": 1,
+      "DireccionVisita": "Redacted",
+      "DireccionEntrega": "Redacted",
+      "Estimacion": 2,
+      "FuenteFinanciamiento": "",
+      "VisibilidadMonto": 0,
+      "MontoEstimado": null,
+      "Tiempo": null,
+      "UnidadTiempo": "1",
+      "Modalidad": 1,
+      "TipoPago": "2",
+      "NombreResponsablePago": "Redacted",
+      "EmailResponsablePago": "redacted@example.invalid",
+      "NombreResponsableContrato": "Redacted",
+      "EmailResponsableContrato": "redacted@example.invalid",
+      "FonoResponsableContrato": "Redacted",
+      "ProhibicionContratacion": "",
+      "SubContratacion": "0",
+      "UnidadTiempoDuracionContrato": 1,
+      "TiempoDuracionContrato": "0",
+      "TipoDuracionContrato": " ",
+      "JustificacionMontoEstimado": "",
+      "ObservacionContract": null,
+      "ExtensionPlazo": 0,
+      "EsBaseTipo": 0,
+      "UnidadTiempoContratoLicitacion": "1",
+      "ValorTiempoRenovacion": "0",
+      "PeriodoTiempoRenovacion": " ",
+      "EsRenovable": 0,
+      "CodigoBIP": null,
+      "Adjudicacion": {
+        "Tipo": 5,
+        "Fecha": "2014-01-31T00:00:00",
+        "Numero": "7",
+        "NumeroOferentes": 25,
+        "UrlActa": "https://example.invalid/redacted"
+      },
+      "Items": {
+        "Cantidad": 6,
+        "Listado": [
+          {
+            "Correlativo": 1,
+            "CodigoProducto": 42271718,
+            "CodigoCategoria": "42271700",
+            "Categoria": "Equipamiento y suministros médicos / Productos de resucitación, anestesia y respiratorios / Sistemas y dispositivos de terapia de entrega de oxígeno",
+            "NombreProducto": "Redacted",
+            "Descripcion": "Redacted",
+            "UnidadMedida": "Unidad",
+            "Cantidad": 10.0,
+            "Adjudicacion": null
+          },
+          {
+            "Correlativo": 2,
+            "CodigoProducto": 42271718,
+            "CodigoCategoria": "42271700",
+            "Categoria": "Equipamiento y suministros médicos / Productos de resucitación, anestesia y respiratorios / Sistemas y dispositivos de terapia de entrega de oxígeno",
+            "NombreProducto": "Redacted",
+            "Descripcion": "Redacted",
+            "UnidadMedida": "Unidad",
+            "Cantidad": 100.0,
+            "Adjudicacion": {
+              "RutProveedor": "00.000.000-0",
+              "NombreProveedor": "Redacted",
+              "Cantidad": 100.0,
+              "MontoUnitario": 200.0
+            }
+          },
+          {
+            "Correlativo": 3,
+            "CodigoProducto": 42311528,
+            "CodigoCategoria": "42311500",
+            "Categoria": "Equipamiento y suministros médicos / Productos para el cuidado de heridas / Vendas, vendajes y productos relacionados",
+            "NombreProducto": "Redacted",
+            "Descripcion": "Redacted",
+            "UnidadMedida": "Unidad",
+            "Cantidad": 20.0,
+            "Adjudicacion": {
+              "RutProveedor": "00.000.000-0",
+              "NombreProveedor": "Redacted",
+              "Cantidad": 20.0,
+              "MontoUnitario": 1434.0
+            }
+          },
+          {
+            "Correlativo": 4,
+            "CodigoProducto": 51121603,
+            "CodigoCategoria": "51121600",
+            "Categoria": "Medicamentos y productos farmacéuticos / Medicamentos cardiovasculares / Medicamentos antiangina",
+            "NombreProducto": "Redacted",
+            "Descripcion": "Redacted",
+            "UnidadMedida": "Unidad",
+            "Cantidad": 400.0,
+            "Adjudicacion": null
+          },
+          {
+            "Correlativo": 5,
+            "CodigoProducto": 51131603,
+            "CodigoCategoria": "51131600",
+            "Categoria": "Medicamentos y productos farmacéuticos / Medicamentos hematólicos / Anticoagulantes",
+            "NombreProducto": "Redacted",
+            "Descripcion": "Redacted",
+            "UnidadMedida": "Unidad",
+            "Cantidad": 50.0,
+            "Adjudicacion": {
+              "RutProveedor": "00.000.000-0",
+              "NombreProveedor": "Redacted",
+              "Cantidad": 50.0,
+              "MontoUnitario": 1650.0
+            }
+          },
+          {
+            "Correlativo": 6,
+            "CodigoProducto": 51131613,
+            "CodigoCategoria": "51131600",
+            "Categoria": "Medicamentos y productos farmacéuticos / Medicamentos hematólicos / Anticoagulantes",
+            "NombreProducto": "Redacted",
+            "Descripcion": "Redacted",
+            "UnidadMedida": "Unidad",
+            "Cantidad": 30.0,
+            "Adjudicacion": {
+              "RutProveedor": "00.000.000-0",
+              "NombreProveedor": "Redacted",
+              "Cantidad": 30.0,
+              "MontoUnitario": 400.0
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
