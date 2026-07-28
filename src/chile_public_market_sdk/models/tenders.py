@@ -1,4 +1,4 @@
-"""Modelos de licitaciones."""
+"""Tender models."""
 
 from __future__ import annotations
 
@@ -12,44 +12,22 @@ from .common import LineItem, Organization
 
 
 class Tender(MercadoPublicoModel):
-    codigo_externo: str = Field(
-        validation_alias=AliasChoices("CodigoExterno", "Codigo", "codigo_externo")
+    external_code: str = Field(
+        validation_alias=AliasChoices("external_code", "code")
     )
-    nombre: str | None = Field(
-        default=None, validation_alias=AliasChoices("Nombre", "nombre")
-    )
-    codigo_estado: int | None = Field(
-        default=None, validation_alias=AliasChoices("CodigoEstado", "codigo_estado")
-    )
-    estado: str | None = Field(
-        default=None, validation_alias=AliasChoices("Estado", "estado")
-    )
-    descripcion: str | None = Field(
-        default=None, validation_alias=AliasChoices("Descripcion", "descripcion")
-    )
-    fecha_cierre: datetime | str | None = Field(
-        default=None, validation_alias=AliasChoices("FechaCierre", "fecha_cierre")
-    )
-    moneda: str | None = Field(
-        default=None, validation_alias=AliasChoices("Moneda", "moneda")
-    )
-    monto_estimado: Decimal | None = Field(
-        default=None, validation_alias=AliasChoices("MontoEstimado", "monto_estimado")
-    )
-    comprador: Organization | None = Field(
-        default=None, validation_alias=AliasChoices("Comprador", "comprador")
-    )
-    items: list[LineItem] = Field(
-        default_factory=list, validation_alias=AliasChoices("Items", "items")
-    )
+    name: str | None = None
+    status_code: int | None = None
+    status: str | None = None
+    description: str | None = None
+    closing_at: datetime | str | None = None
+    currency: str | None = None
+    estimated_amount: Decimal | None = None
+    buyer: Organization | None = None
+    items: list[LineItem] = Field(default_factory=list)
 
 
 class TenderResponse(MercadoPublicoModel):
-    cantidad: int = Field(default=0, validation_alias=AliasChoices("Cantidad", "cantidad"))
-    fecha_creacion: datetime | str | None = Field(
-        default=None, validation_alias=AliasChoices("FechaCreacion", "fecha_creacion")
-    )
-    version: str | None = Field(default=None, validation_alias=AliasChoices("Version", "version"))
-    listado: list[Tender] = Field(
-        default_factory=list, validation_alias=AliasChoices("Listado", "listado")
-    )
+    count: int = 0
+    created_at: datetime | str | None = None
+    version: str | None = None
+    items: list[Tender] = Field(default_factory=list)

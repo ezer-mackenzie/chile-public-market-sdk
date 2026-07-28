@@ -34,10 +34,10 @@ def test_ticket_can_come_from_environment(
         return httpx.Response(200, json=tender_payload)
 
     sdk = MercadoPublicoClient(http_client=make_client(handler))
-    assert sdk.licitaciones().cantidad == 1
+    assert sdk.get_tenders().count == 1
 
 
-def test_licitaciones_formats_filters_and_validates_response(
+def test_get_tenders_formats_filters_and_validates_response(
     make_client: Any,
     tender_payload: dict[str, Any],
 ) -> None:
@@ -49,19 +49,19 @@ def test_licitaciones_formats_filters_and_validates_response(
         return httpx.Response(200, json=tender_payload)
 
     sdk = MercadoPublicoClient(ticket="secret", http_client=make_client(handler))
-    response = sdk.licitaciones(fecha=date(2026, 6, 12), estado=TenderStatus.PUBLISHED)
+    response = sdk.get_tenders(date=date(2026, 6, 12), status=TenderStatus.PUBLISHED)
 
-    assert response.listado[0].codigo_externo == "1509-5-L114"
-    assert response.listado[0].model_extra == {"CampoNuevo": "se conserva"}
+    assert response.items[0].external_code == "1509-5-L114"
+    assert response.items[0].model_extra == {"CampoNuevo": "preserved"}
 
 
-def test_codigo_cannot_be_combined_with_other_filters(make_client: Any) -> None:
+def test_code_cannot_be_combined_with_other_filters(make_client: Any) -> None:
     sdk = MercadoPublicoClient(
         ticket="secret",
         http_client=make_client(lambda request: httpx.Response(500)),
     )
     with pytest.raises(RequestValidationError):
-        sdk.licitaciones(codigo="1", fecha="12062026")
+        sdk.get_tenders(code="1", date="12062026")
 
 
 def test_all_v1_company_endpoints(make_client: Any) -> None:
@@ -80,15 +80,15 @@ def test_all_v1_company_endpoints(make_client: Any) -> None:
         )
 
     sdk = MercadoPublicoClient(ticket="secret", http_client=make_client(handler))
-    assert sdk.buscar_proveedor("70.017.820-k").empresas[0].codigo_empresa == 17793
-    assert sdk.compradores().empresas[0].codigo_empresa == 6945
+    assert sdk.find_supplier("70.017.820-k").companies[0].company_code == 17793
+    assert sdk.get_buyers().companies[0].company_code == 6945
     assert seen == [
         "/servicios/v1/publico/Empresas/BuscarProveedor",
         "/servicios/v1/publico/Empresas/BuscarComprador",
     ]
 
 
-def test_compra_agil_uses_header_and_filters(
+def test_agile_purchase_uses_header_and_filters(
     make_client: Any, agile_page_payload: dict[str, Any]
 ) -> None:
     def handler(request: httpx.Request) -> httpx.Response:
@@ -100,24 +100,27 @@ def test_compra_agil_uses_header_and_filters(
         return httpx.Response(200, json=agile_page_payload)
 
     sdk = MercadoPublicoClient(ticket="secret", http_client=make_client(handler))
-    page = sdk.compras_agiles(
-        ttl_cambio_ms=300_000,
-        estados=[AgilePurchaseStatus.PUBLISHED, AgilePurchaseStatus.CLOSED],
-        regiones=[13, 5],
+    page = sdk.get_agile_purchases(
+        last_change_ttl_ms=300_000,
+        statuses=[AgilePurchaseStatus.PUBLISHED, AgilePurchaseStatus.CLOSED],
+        regions=[13, 5],
     )
-    assert page.paginacion.total_resultados == 1
+    assert page.pagination.total_results == 1
 
 
 @pytest.mark.parametrize(
     ("kwargs", "message"),
     [
-        ({"ttl_cambio_ms": 1, "cambio_desde": "2026-01-01T00:00:00Z"}, "ttl_cambio_ms"),
-        ({"id": "code", "q": "text"}, "mutuamente"),
-        ({"tamano_pagina": 51}, "tamano_pagina"),
-        ({"regiones": [17]}, "región"),
+        (
+            {"last_change_ttl_ms": 1, "changed_from": "2026-01-01T00:00:00Z"},
+            "last_change_ttl_ms",
+        ),
+        ({"external_id": "code", "query": "text"}, "mutually"),
+        ({"page_size": 51}, "page_size"),
+        ({"regions": [17]}, "region"),
     ],
 )
-def test_compra_agil_validates_filters(
+def test_agile_purchase_validates_filters(
     make_client: Any, kwargs: dict[str, Any], message: str
 ) -> None:
     sdk = MercadoPublicoClient(
@@ -125,7 +128,7 @@ def test_compra_agil_validates_filters(
         http_client=make_client(lambda request: httpx.Response(500)),
     )
     with pytest.raises(RequestValidationError, match=message):
-        sdk.compras_agiles(**kwargs)
+        sdk.get_agile_purchases(**kwargs)
 
 
 @pytest.mark.parametrize(
@@ -141,11 +144,11 @@ def test_http_errors_are_normalized(
             headers={"Retry-After": "10"},
             json={
                 "success": "NOK",
-                "errors": [{"codigo": str(status), "mensaje": "falló", "detalle": None}],
+                "errors": [{"codigo": str(status), "mensaje": "failed", "detalle": None}],
             },
         )
 
     sdk = MercadoPublicoClient(ticket="secret", http_client=make_client(handler))
     with pytest.raises(error_type) as captured:
-        sdk.compras_agiles()
+        sdk.get_agile_purchases()
     assert "secret" not in str(captured.value)

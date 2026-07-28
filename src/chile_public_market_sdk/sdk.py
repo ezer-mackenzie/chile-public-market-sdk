@@ -1,12 +1,12 @@
-"""Fachadas de alto nivel del SDK."""
+"""High-level SDK facades."""
 
 from .async_client import AsyncMercadoPublicoClient
 from .client import MercadoPublicoClient
 
 
 class MercadoPublico(MercadoPublicoClient):
-    """Fachada síncrona principal."""
+    """Primary synchronous facade."""
 
 
 class AsyncMercadoPublico(AsyncMercadoPublicoClient):
-    """Fachada asíncrona principal."""
+    """Primary asynchronous facade."""

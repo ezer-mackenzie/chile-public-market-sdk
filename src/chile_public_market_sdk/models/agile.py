@@ -1,4 +1,4 @@
-"""Modelos de Compra Ágil v2."""
+"""Agile Purchase v2 models."""
 
 from __future__ import annotations
 
@@ -12,9 +12,9 @@ from .base import MercadoPublicoModel
 
 
 class AgileError(MercadoPublicoModel):
-    codigo: str
-    mensaje: str
-    detalle: str | None = None
+    code: str
+    message: str
+    details: str | None = None
 
 
 class AgileEnvelope[PayloadT](MercadoPublicoModel):
@@ -25,167 +25,167 @@ class AgileEnvelope[PayloadT](MercadoPublicoModel):
 
 
 class AgileState(MercadoPublicoModel):
-    id_estado: int
-    codigo: AgilePurchaseStatus
-    glosa: str
+    status_id: int
+    code: AgilePurchaseStatus
+    label: str
 
 
 class AgileCall(MercadoPublicoModel):
-    estado_convocatoria: int
-    descripcion: str
-    fecha_cierre_primer_llamado: datetime | None = None
-    fecha_cierre_segundo_llamado: datetime | None = None
+    round_status: int
+    description: str
+    first_round_closing_at: datetime | None = None
+    second_round_closing_at: datetime | None = None
 
 
 class AgileDocument(MercadoPublicoModel):
     id: str
-    nombre: str
+    name: str
 
 
 class AgileDates(MercadoPublicoModel):
-    fecha_publicacion: datetime
-    fecha_cierre: datetime
-    fecha_ultimo_cambio: datetime
-    fecha_cancelacion: datetime | None = None
+    published_at: datetime
+    closing_at: datetime
+    last_changed_at: datetime
+    cancelled_at: datetime | None = None
 
 
 class AgileInstitution(MercadoPublicoModel):
-    organismo_comprador: str
-    rut: str
-    unidad_compra: str
+    buyer_organization: str
+    tax_id: str
+    purchasing_unit: str
     region: int | None = None
-    nombre_region: str | None = None
+    region_name: str | None = None
 
 
 class AgileAmounts(MercadoPublicoModel):
-    moneda: str
-    monto_disponible: Decimal | None = None
-    monto_disponible_clp: Decimal | None = None
+    currency: str
+    available_amount: Decimal | None = None
+    available_amount_clp: Decimal | None = None
 
 
 class AgileSummary(MercadoPublicoModel):
-    total_ofertas_recibidas: int = 0
-    total_demandas: int | None = None
-    multa_sancion: Decimal | None = None
+    total_quotes_received: int = 0
+    total_requests: int | None = None
+    penalty_amount: Decimal | None = None
 
 
 class AgileReasons(MercadoPublicoModel):
-    motivo_cancelacion: str | None = None
-    motivo_desierta: str | None = None
-    motivo_seleccion: str | None = None
+    cancellation_reason: str | None = None
+    desertion_reason: str | None = None
+    selection_reason: str | None = None
 
 
 class AgileLinks(MercadoPublicoModel):
-    detalle: str
+    details: str
 
 
 class AgilePurchaseSummary(MercadoPublicoModel):
-    codigo: str
-    nombre: str
-    estado: AgileState
-    convocatoria: AgileCall
-    documentos: list[AgileDocument] = Field(default_factory=list)
-    fechas: AgileDates
-    montos: AgileAmounts
-    institucion: AgileInstitution
-    resumen: AgileSummary
-    motivos: AgileReasons
+    code: str
+    name: str
+    status: AgileState
+    call: AgileCall
+    documents: list[AgileDocument] = Field(default_factory=list)
+    dates: AgileDates
+    amounts: AgileAmounts
+    institution: AgileInstitution
+    summary: AgileSummary
+    reasons: AgileReasons
     links: AgileLinks
 
 
 class AgilePagination(MercadoPublicoModel):
-    total_paginas: int
-    numero_pagina: int
-    tamano_pagina: int
-    total_resultados: int
+    total_pages: int
+    page_number: int
+    page_size: int
+    total_results: int
 
 
 class AgilePurchasePage(MercadoPublicoModel):
     items: list[AgilePurchaseSummary]
-    paginacion: AgilePagination
+    pagination: AgilePagination
 
 
 class AgileDelivery(MercadoPublicoModel):
-    direccion_entrega: str
-    plazo_entrega_dias: int | None = None
+    delivery_address: str
+    delivery_days: int | None = None
 
 
 class AgileBudget(MercadoPublicoModel):
-    tipo_presupuesto: str
-    moneda: str
-    presupuesto_estimado: Decimal | None = None
-    monto_disponible: Decimal | None = None
-    monto_disponible_clp: Decimal | None = None
-    valor_cambio_moneda: Decimal | None = None
-    fecha_cambio_moneda: datetime | None = None
+    budget_type: str
+    currency: str
+    estimated_budget: Decimal | None = None
+    available_amount: Decimal | None = None
+    available_amount_clp: Decimal | None = None
+    exchange_rate: Decimal | None = None
+    exchange_rate_at: datetime | None = None
 
 
 class AgilePurchaseOrderReference(MercadoPublicoModel):
-    id_orden_compra: int | None = None
-    id_oc: int | None = None
-    codigo_orden_compra: str | None = None
-    estado_orden_compra: str | None = None
+    purchase_order_id: int | None = None
+    purchase_order_internal_id: int | None = None
+    purchase_order_code: str | None = None
+    purchase_order_status: str | None = None
 
 
 class AgileRequestedProduct(MercadoPublicoModel):
-    codigo_producto: int | str
-    nombre: str
-    descripcion: str | None = None
-    cantidad: Decimal
-    unidad_medida: str
+    product_code: int | str
+    name: str
+    description: str | None = None
+    quantity: Decimal
+    unit_of_measure: str
 
 
 class AgileQuotedProduct(MercadoPublicoModel):
-    codigo_producto: int | str
-    nombre_producto: str
-    descripcion: str | None = None
-    cantidad: Decimal
-    precio_unitario: Decimal | None = None
-    monto_total_producto: Decimal | None = None
+    product_code: int | str
+    product_name: str
+    description: str | None = None
+    quantity: Decimal
+    unit_price: Decimal | None = None
+    product_total: Decimal | None = None
 
 
 class AgileQuote(MercadoPublicoModel):
-    rut_proveedor: str
-    razon_social: str
-    es_emt: bool
-    id_cotizacion: int | None = None
-    codigo_empresa: str | None = None
-    codigo_sucursal_empresa: str | None = None
-    estado_por_comprador: str | None = None
-    activo: bool | None = None
-    fecha_creacion: datetime | None = None
-    fecha_vigencia: datetime | None = None
-    valor_neto: Decimal | None = None
-    total_impuesto: Decimal | None = None
-    monto_despacho: Decimal | None = None
-    monto_total: Decimal | None = None
-    nombre_impuesto: str | None = None
-    porcentaje_impuesto: Decimal | None = None
-    descripcion_cotizacion: str | None = None
-    descripcion: str | None = None
-    justificacion_inadmisibilidad: str | None = None
-    productos_cotizados: list[AgileQuotedProduct] = Field(default_factory=list)
+    supplier_tax_id: str
+    legal_name: str
+    is_small_business: bool
+    quote_id: int | None = None
+    company_code: str | None = None
+    company_branch_code: str | None = None
+    buyer_status: str | None = None
+    active: bool | None = None
+    created_at: datetime | None = None
+    valid_until: datetime | None = None
+    net_amount: Decimal | None = None
+    tax_amount: Decimal | None = None
+    shipping_amount: Decimal | None = None
+    total_amount: Decimal | None = None
+    tax_name: str | None = None
+    tax_percentage: Decimal | None = None
+    quote_description: str | None = None
+    description: str | None = None
+    inadmissibility_reason: str | None = None
+    quoted_products: list[AgileQuotedProduct] = Field(default_factory=list)
 
 
 class AgileFlags(MercadoPublicoModel):
-    considera_requisitos_medioambientales: bool
-    considera_requisitos_impacto_social_economico: bool
+    has_environmental_requirements: bool
+    has_social_economic_requirements: bool
 
 
 class AgilePurchaseDetail(MercadoPublicoModel):
-    codigo: str
-    nombre: str
-    descripcion: str
-    estado: AgileState
-    convocatoria: AgileCall
-    fechas: AgileDates
-    entrega: AgileDelivery
-    documentos: list[AgileDocument] = Field(default_factory=list)
-    presupuesto: AgileBudget
-    orden_compra: AgilePurchaseOrderReference
-    institucion: AgileInstitution
-    productos_solicitados: list[AgileRequestedProduct] = Field(default_factory=list)
-    proveedores_cotizando: list[AgileQuote] = Field(default_factory=list)
-    resumen: AgileSummary
-    motivos: AgileReasons
+    code: str
+    name: str
+    description: str
+    status: AgileState
+    call: AgileCall
+    dates: AgileDates
+    delivery: AgileDelivery
+    documents: list[AgileDocument] = Field(default_factory=list)
+    budget: AgileBudget
+    purchase_order: AgilePurchaseOrderReference
+    institution: AgileInstitution
+    requested_products: list[AgileRequestedProduct] = Field(default_factory=list)
+    quoting_suppliers: list[AgileQuote] = Field(default_factory=list)
+    summary: AgileSummary
+    reasons: AgileReasons
     flags: AgileFlags

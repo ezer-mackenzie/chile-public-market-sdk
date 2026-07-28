@@ -1,4 +1,4 @@
-"""SDK para Mercado Público de Chile."""
+"""Python SDK for Chile's Mercado Público APIs."""
 
 from .async_client import AsyncMercadoPublicoClient
 from .client import MercadoPublicoClient

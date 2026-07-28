@@ -1,39 +1,32 @@
-"""Modelos para compradores y proveedores."""
+"""Buyer and supplier company models."""
 
 from __future__ import annotations
 
 from typing import Any
 
-from pydantic import AliasChoices, Field, model_validator
+from pydantic import Field, model_validator
 
-from .base import MercadoPublicoModel
+from .base import MercadoPublicoModel, _normalize_wire_keys
 
 
 class Company(MercadoPublicoModel):
-    codigo_empresa: str | int | None = Field(
-        default=None, validation_alias=AliasChoices("CodigoEmpresa", "codigoEmpresa")
-    )
-    nombre_empresa: str | None = Field(
-        default=None, validation_alias=AliasChoices("NombreEmpresa", "nombreEmpresa")
-    )
-    rut: str | None = Field(
-        default=None,
-        validation_alias=AliasChoices("RutEmpresa", "RUT", "Rut", "rut"),
-    )
+    company_code: str | int | None = None
+    company_name: str | None = None
+    tax_id: str | None = None
 
 
 class CompanyResponse(MercadoPublicoModel):
-    empresas: list[Company] = Field(default_factory=list)
+    companies: list[Company] = Field(default_factory=list)
 
     @model_validator(mode="before")
     @classmethod
     def normalize_shape(cls, value: Any) -> Any:
-        if isinstance(value, list):
-            return {"empresas": value}
-        if isinstance(value, dict):
-            for key in ("listaEmpresas", "Listado", "listado", "Empresas"):
-                if key in value:
-                    return {"empresas": value[key], **value}
-            if "CodigoEmpresa" in value or "codigoEmpresa" in value:
-                return {"empresas": [value]}
-        return value
+        normalized = _normalize_wire_keys(value)
+        if isinstance(normalized, list):
+            return {"companies": normalized}
+        if isinstance(normalized, dict):
+            if "companies" in normalized:
+                return normalized
+            if "company_code" in normalized:
+                return {"companies": [normalized]}
+        return normalized

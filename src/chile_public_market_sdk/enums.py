@@ -1,4 +1,4 @@
-"""Enumeraciones documentadas por Mercado Público."""
+"""Enumerations documented by Mercado Público."""
 
 from enum import IntEnum, StrEnum
 

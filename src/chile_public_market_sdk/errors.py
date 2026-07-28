@@ -1,4 +1,4 @@
-"""Excepciones públicas del SDK."""
+"""Public SDK exceptions."""
 
 from __future__ import annotations
 
@@ -6,27 +6,27 @@ from typing import Any
 
 
 class MercadoPublicoError(Exception):
-    """Error base del SDK."""
+    """Base exception for every SDK error."""
 
 
 class ConfigurationError(MercadoPublicoError):
-    """La configuración del cliente no es válida."""
+    """The client configuration is invalid."""
 
 
 class RequestValidationError(MercadoPublicoError, ValueError):
-    """Los filtros entregados por el consumidor son incompatibles."""
+    """The supplied request filters are invalid or incompatible."""
 
 
 class TransportError(MercadoPublicoError):
-    """No fue posible comunicarse con Mercado Público."""
+    """The client could not communicate with Mercado Público."""
 
 
 class ResponseValidationError(MercadoPublicoError):
-    """La respuesta no cumple el contrato esperado."""
+    """The response does not match the expected contract."""
 
 
 class APIError(MercadoPublicoError):
-    """Mercado Público respondió con un error."""
+    """Mercado Público returned an error."""
 
     def __init__(
         self,
@@ -45,12 +45,12 @@ class APIError(MercadoPublicoError):
 
 
 class AuthenticationError(APIError):
-    """El ticket falta, es inválido o está inactivo."""
+    """The ticket is missing, invalid, or inactive."""
 
 
 class NotFoundError(APIError):
-    """El recurso solicitado no existe."""
+    """The requested resource does not exist."""
 
 
 class RateLimitError(APIError):
-    """Se agotó la cuota asociada al ticket."""
+    """The quota associated with the ticket has been exhausted."""

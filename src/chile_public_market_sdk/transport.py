@@ -1,4 +1,4 @@
-"""Transporte HTTP síncrono y asíncrono."""
+"""Synchronous and asynchronous HTTP transport."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ Params = Mapping[str, str | int | float]
 
 def _api_error(response: httpx.Response, payload: Any) -> APIError:
     status = response.status_code
-    message = f"Mercado Público respondió con HTTP {status}."
+    message = f"Mercado Público returned HTTP {status}."
     code: str | None = None
     details: Any = None
 
@@ -61,7 +61,7 @@ def _decode_response(response: httpx.Response) -> Any:
     except Exception:
         if response.is_error:
             raise APIError(
-                f"Mercado Público respondió con HTTP {response.status_code}.",
+                f"Mercado Público returned HTTP {response.status_code}.",
                 status_code=response.status_code,
                 retry_after=response.headers.get("Retry-After"),
             ) from None
@@ -74,7 +74,7 @@ def _decode_response(response: httpx.Response) -> Any:
 
 
 class SyncTransport:
-    """Adaptador de `httpx.Client` con errores normalizados."""
+    """`httpx.Client` adapter with normalized SDK errors."""
 
     def __init__(self, client: httpx.Client) -> None:
         self.client = client
@@ -89,12 +89,12 @@ class SyncTransport:
         try:
             response = self.client.get(url, params=params, headers=headers)
         except httpx.HTTPError as exc:
-            raise TransportError("No fue posible comunicarse con Mercado Público.") from exc
+            raise TransportError("Could not communicate with Mercado Público.") from exc
         return _decode_response(response)
 
 
 class AsyncTransport:
-    """Adaptador de `httpx.AsyncClient` con errores normalizados."""
+    """`httpx.AsyncClient` adapter with normalized SDK errors."""
 
     def __init__(self, client: httpx.AsyncClient) -> None:
         self.client = client
@@ -109,5 +109,5 @@ class AsyncTransport:
         try:
             response = await self.client.get(url, params=params, headers=headers)
         except httpx.HTTPError as exc:
-            raise TransportError("No fue posible comunicarse con Mercado Público.") from exc
+            raise TransportError("Could not communicate with Mercado Público.") from exc
         return _decode_response(response)

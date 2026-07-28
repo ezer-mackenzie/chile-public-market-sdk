@@ -1,4 +1,4 @@
-"""Conversión y validación de respuestas JSON."""
+"""JSON response decoding and validation."""
 
 from __future__ import annotations
 
@@ -11,20 +11,20 @@ from .errors import ResponseValidationError
 
 
 def decode_json(content: bytes) -> Any:
-    """Decodifica JSON, tolerando BOM UTF-8 presente en servicios legados."""
+    """Decode JSON while tolerating the UTF-8 BOM returned by legacy services."""
 
     try:
         return json.loads(content.decode("utf-8-sig"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise ResponseValidationError("Mercado Público devolvió JSON inválido.") from exc
+        raise ResponseValidationError("Mercado Público returned invalid JSON.") from exc
 
 
 def parse_model[ModelT: BaseModel](model: type[ModelT], payload: Any) -> ModelT:
-    """Valida un payload usando el modelo Pydantic indicado."""
+    """Validate a payload against the supplied Pydantic model."""
 
     try:
         return model.model_validate(payload)
     except ValidationError as exc:
         raise ResponseValidationError(
-            f"La respuesta no coincide con {model.__name__}: {exc.error_count()} error(es)."
+            f"The response does not match {model.__name__}: {exc.error_count()} error(s)."
         ) from exc

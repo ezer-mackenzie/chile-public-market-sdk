@@ -1,4 +1,4 @@
-"""Normalización de filtros de consulta."""
+"""Request parameter normalization."""
 
 from __future__ import annotations
 
@@ -17,11 +17,11 @@ def v1_date(value: date | str) -> str:
         return value.strftime("%d%m%Y")
     digits = value.strip()
     if len(digits) != 8 or not digits.isdigit():
-        raise RequestValidationError("La fecha de API v1 debe tener formato ddmmaaaa.")
+        raise RequestValidationError("A v1 API date must use ddmmyyyy format.")
     try:
         datetime.strptime(digits, "%d%m%Y")
     except ValueError as exc:
-        raise RequestValidationError("La fecha de API v1 no es válida.") from exc
+        raise RequestValidationError("The v1 API date is invalid.") from exc
     return digits
 
 
@@ -31,7 +31,7 @@ def iso_datetime(value: datetime | str) -> str:
     try:
         datetime.fromisoformat(value.replace("Z", "+00:00"))
     except ValueError as exc:
-        raise RequestValidationError("La fecha debe usar formato ISO-8601.") from exc
+        raise RequestValidationError("The date must use ISO-8601 format.") from exc
     return value
 
 

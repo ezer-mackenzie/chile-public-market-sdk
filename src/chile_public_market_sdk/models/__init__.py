@@ -1,4 +1,4 @@
-"""Modelos Pydantic exportados por el SDK."""
+"""Pydantic models exported by the SDK."""
 
 from .agile import (
     AgileEnvelope,

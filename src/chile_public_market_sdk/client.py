@@ -1,4 +1,4 @@
-"""Cliente síncrono para todos los endpoints públicos documentados."""
+"""Synchronous client for every documented public endpoint."""
 
 from __future__ import annotations
 
@@ -25,9 +25,9 @@ from .transport import SyncTransport
 
 
 class MercadoPublicoClient:
-    """Cliente HTTP síncrono.
+    """Synchronous HTTP client.
 
-    Puede recibir un `httpx.Client` para integrar instrumentación o transporte propio.
+    Accepts an optional `httpx.Client` for custom transports and instrumentation.
     """
 
     def __init__(
@@ -67,126 +67,128 @@ class MercadoPublicoClient:
             headers={"ticket": self._ticket},
         )
 
-    def licitaciones(
+    def get_tenders(
         self,
         *,
-        codigo: str | None = None,
-        fecha: date | str | None = None,
-        estado: TenderStatus | str | None = None,
-        codigo_organismo: str | int | None = None,
-        codigo_proveedor: str | int | None = None,
+        code: str | None = None,
+        date: date | str | None = None,
+        status: TenderStatus | str | None = None,
+        buyer_code: str | int | None = None,
+        supplier_code: str | int | None = None,
     ) -> TenderResponse:
-        """Consulta licitaciones por código, fecha, estado, organismo o proveedor."""
+        """Get tenders by code, date, status, buyer, or supplier."""
 
-        if codigo and any((fecha, estado, codigo_organismo, codigo_proveedor)):
-            raise RequestValidationError("codigo no puede combinarse con otros filtros.")
+        if code and any((date, status, buyer_code, supplier_code)):
+            raise RequestValidationError("code cannot be combined with other filters.")
         params = {
-            "codigo": codigo,
-            "fecha": v1_date(fecha) if fecha is not None else None,
-            "estado": enum_value(estado) if estado is not None else None,
-            "CodigoOrganismo": codigo_organismo,
-            "CodigoProveedor": codigo_proveedor,
+            "codigo": code,
+            "fecha": v1_date(date) if date is not None else None,
+            "estado": enum_value(status) if status is not None else None,
+            "CodigoOrganismo": buyer_code,
+            "CodigoProveedor": supplier_code,
         }
         return parse_model(TenderResponse, self._v1("licitaciones.json", params))
 
-    def ordenes_de_compra(
+    def get_purchase_orders(
         self,
         *,
-        codigo: str | None = None,
-        fecha: date | str | None = None,
-        estado: PurchaseOrderStatus | str | None = None,
-        codigo_organismo: str | int | None = None,
-        codigo_proveedor: str | int | None = None,
+        code: str | None = None,
+        date: date | str | None = None,
+        status: PurchaseOrderStatus | str | None = None,
+        buyer_code: str | int | None = None,
+        supplier_code: str | int | None = None,
     ) -> PurchaseOrderResponse:
-        """Consulta órdenes de compra usando todos los filtros de API v1."""
+        """Get purchase orders using every supported v1 filter."""
 
-        if codigo and any((fecha, estado, codigo_organismo, codigo_proveedor)):
-            raise RequestValidationError("codigo no puede combinarse con otros filtros.")
+        if code and any((date, status, buyer_code, supplier_code)):
+            raise RequestValidationError("code cannot be combined with other filters.")
         params = {
-            "codigo": codigo,
-            "fecha": v1_date(fecha) if fecha is not None else None,
-            "estado": enum_value(estado) if estado is not None else None,
-            "CodigoOrganismo": codigo_organismo,
-            "CodigoProveedor": codigo_proveedor,
+            "codigo": code,
+            "fecha": v1_date(date) if date is not None else None,
+            "estado": enum_value(status) if status is not None else None,
+            "CodigoOrganismo": buyer_code,
+            "CodigoProveedor": supplier_code,
         }
         return parse_model(PurchaseOrderResponse, self._v1("ordenesdecompra.json", params))
 
-    def buscar_proveedor(self, rut: str) -> CompanyResponse:
-        """Obtiene el código interno de un proveedor a partir de su RUT."""
+    def find_supplier(self, tax_id: str) -> CompanyResponse:
+        """Find a supplier's internal company code from its Chilean tax ID."""
 
-        if not rut.strip():
-            raise RequestValidationError("rut no puede estar vacío.")
-        payload = self._v1("Empresas/BuscarProveedor", {"rutempresaproveedor": rut})
+        if not tax_id.strip():
+            raise RequestValidationError("tax_id cannot be empty.")
+        payload = self._v1("Empresas/BuscarProveedor", {"rutempresaproveedor": tax_id})
         return parse_model(CompanyResponse, payload)
 
-    def compradores(self) -> CompanyResponse:
-        """Lista todos los organismos compradores de Mercado Público."""
+    def get_buyers(self) -> CompanyResponse:
+        """List every buyer organization registered in Mercado Público."""
 
         return parse_model(CompanyResponse, self._v1("Empresas/BuscarComprador", {}))
 
-    def compras_agiles(
+    def get_agile_purchases(
         self,
         *,
-        ttl_cambio_ms: int | None = None,
-        cambio_desde: datetime | str | None = None,
-        cambio_hasta: datetime | str | None = None,
-        publicado_desde: datetime | str | None = None,
-        publicado_hasta: datetime | str | None = None,
-        estados: Iterable[AgilePurchaseStatus | str] | None = None,
-        regiones: Iterable[int] | None = None,
-        id: str | None = None,
-        q: str | None = None,
-        tamano_pagina: int = 15,
-        numero_pagina: int = 1,
-        ordenar_por: AgilePurchaseSort | str = AgilePurchaseSort.LAST_MODIFIED,
+        last_change_ttl_ms: int | None = None,
+        changed_from: datetime | str | None = None,
+        changed_until: datetime | str | None = None,
+        published_from: datetime | str | None = None,
+        published_until: datetime | str | None = None,
+        statuses: Iterable[AgilePurchaseStatus | str] | None = None,
+        regions: Iterable[int] | None = None,
+        external_id: str | None = None,
+        query: str | None = None,
+        page_size: int = 15,
+        page_number: int = 1,
+        sort_by: AgilePurchaseSort | str = AgilePurchaseSort.LAST_MODIFIED,
     ) -> AgilePurchasePage:
-        """Lista Compras Ágiles con filtros y paginación."""
+        """List Agile Purchases with filters and pagination."""
 
-        if ttl_cambio_ms is not None and (cambio_desde is not None or cambio_hasta is not None):
+        if last_change_ttl_ms is not None and (
+            changed_from is not None or changed_until is not None
+        ):
             raise RequestValidationError(
-                "ttl_cambio_ms no puede combinarse con cambio_desde/cambio_hasta."
+                "last_change_ttl_ms cannot be combined with changed_from/changed_until."
             )
-        if id and q:
-            raise RequestValidationError("id y q son mutuamente excluyentes.")
-        if not 1 <= tamano_pagina <= 50:
-            raise RequestValidationError("tamano_pagina debe estar entre 1 y 50.")
-        if numero_pagina < 1:
-            raise RequestValidationError("numero_pagina debe ser mayor o igual a 1.")
-        region_values = list(regiones) if regiones is not None else None
+        if external_id and query:
+            raise RequestValidationError("external_id and query are mutually exclusive.")
+        if not 1 <= page_size <= 50:
+            raise RequestValidationError("page_size must be between 1 and 50.")
+        if page_number < 1:
+            raise RequestValidationError("page_number must be greater than or equal to 1.")
+        region_values = list(regions) if regions is not None else None
         if region_values and any(not 1 <= region <= 16 for region in region_values):
-            raise RequestValidationError("Cada región debe estar entre 1 y 16.")
+            raise RequestValidationError("Each region code must be between 1 and 16.")
 
         params = {
-            "ttl_cambio_ms": ttl_cambio_ms,
-            "cambio_desde": iso_datetime(cambio_desde) if cambio_desde is not None else None,
-            "cambio_hasta": iso_datetime(cambio_hasta) if cambio_hasta is not None else None,
+            "ttl_cambio_ms": last_change_ttl_ms,
+            "cambio_desde": iso_datetime(changed_from) if changed_from is not None else None,
+            "cambio_hasta": iso_datetime(changed_until) if changed_until is not None else None,
             "publicado_desde": (
-                iso_datetime(publicado_desde) if publicado_desde is not None else None
+                iso_datetime(published_from) if published_from is not None else None
             ),
             "publicado_hasta": (
-                iso_datetime(publicado_hasta) if publicado_hasta is not None else None
+                iso_datetime(published_until) if published_until is not None else None
             ),
-            "estado": csv_values(estados) if estados is not None else None,
+            "estado": csv_values(statuses) if statuses is not None else None,
             "region": csv_values(region_values) if region_values is not None else None,
-            "id": id,
-            "q": q,
-            "tamano_pagina": tamano_pagina,
-            "numero_pagina": numero_pagina,
-            "ordenar_por": enum_value(ordenar_por),
+            "id": external_id,
+            "q": query,
+            "tamano_pagina": page_size,
+            "numero_pagina": page_number,
+            "ordenar_por": enum_value(sort_by),
         }
         envelope_type = AgileEnvelope[AgilePurchasePage]
         envelope = parse_model(envelope_type, self._v2("compra-agil", params))
         if envelope.payload is None:
-            raise APIError("Compra Ágil devolvió una respuesta exitosa sin payload.")
+            raise APIError("Agile Purchase returned a successful response without a payload.")
         return envelope.payload
 
-    def compra_agil(self, codigo: str) -> AgilePurchaseDetail:
-        """Obtiene el detalle completo de una Compra Ágil."""
+    def get_agile_purchase(self, code: str) -> AgilePurchaseDetail:
+        """Get the complete details for one Agile Purchase."""
 
-        if not codigo.strip():
-            raise RequestValidationError("codigo no puede estar vacío.")
+        if not code.strip():
+            raise RequestValidationError("code cannot be empty.")
         envelope_type = AgileEnvelope[AgilePurchaseDetail]
-        envelope = parse_model(envelope_type, self._v2(f"compra-agil/{codigo}"))
+        envelope = parse_model(envelope_type, self._v2(f"compra-agil/{code}"))
         if envelope.payload is None:
-            raise APIError("Compra Ágil devolvió una respuesta exitosa sin payload.")
+            raise APIError("Agile Purchase returned a successful response without a payload.")
         return envelope.payload

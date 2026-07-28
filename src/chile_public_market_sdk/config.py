@@ -1,4 +1,4 @@
-"""Configuración compartida por los clientes."""
+"""Configuration shared by synchronous and asynchronous clients."""
 
 from __future__ import annotations
 
@@ -14,9 +14,9 @@ DEFAULT_TICKET_ENV = "MERCADO_PUBLICO_TICKET"
 
 @dataclass(frozen=True, slots=True)
 class ClientConfig:
-    """Configuración inmutable del SDK.
+    """Immutable SDK configuration.
 
-    El ticket explícito tiene precedencia sobre la variable de entorno.
+    An explicit ticket takes precedence over the configured environment variable.
     """
 
     ticket: str | None = None
@@ -29,6 +29,6 @@ class ClientConfig:
         value = self.ticket or os.getenv(self.ticket_env)
         if not value or not value.strip():
             raise ConfigurationError(
-                f"Debes proporcionar ticket=... o definir la variable {self.ticket_env}."
+                f"Provide ticket=... or define the {self.ticket_env} environment variable."
             )
         return value.strip()

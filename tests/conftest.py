@@ -24,10 +24,10 @@ def tender_payload() -> dict[str, Any]:
         "Listado": [
             {
                 "CodigoExterno": "1509-5-L114",
-                "Nombre": "Compra de insumos",
+                "Nombre": "Office supplies",
                 "CodigoEstado": 5,
                 "Estado": "Publicada",
-                "CampoNuevo": "se conserva",
+                "CampoNuevo": "preserved",
             }
         ],
     }
@@ -42,7 +42,7 @@ def agile_page_payload() -> dict[str, Any]:
             "items": [
                 {
                     "codigo": "1057539-228-COT26",
-                    "nombre": "Materiales eléctricos",
+                    "nombre": "Electrical supplies",
                     "estado": {"id_estado": 1, "codigo": "publicada", "glosa": "Publicada"},
                     "convocatoria": {
                         "estado_convocatoria": 1,
@@ -61,7 +61,7 @@ def agile_page_payload() -> dict[str, Any]:
                         "monto_disponible_clp": 100000,
                     },
                     "institucion": {
-                        "organismo_comprador": "Organismo",
+                        "organismo_comprador": "Public organization",
                         "rut": "60.000.000-0",
                         "unidad_compra": "Unidad",
                         "region": 13,
