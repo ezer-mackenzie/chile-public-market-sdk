@@ -34,3 +34,16 @@ attribute names. This change occurs before the first stable release.
 Response models now expose English attributes such as `count`, `items`,
 `external_code`, `company_code`, and `pagination`. The upstream Spanish JSON
 keys remain accepted automatically.
+
+## Class names
+
+| Previous name | Current name |
+|---|---|
+| `MercadoPublicoClient` | `SyncChilePublicMarketClient` |
+| `AsyncMercadoPublicoClient` | `AsyncChilePublicMarketClient` |
+| `MercadoPublico` | `SyncChilePublicMarketSDK` |
+| `AsyncMercadoPublico` | `AsyncChilePublicMarketSDK` |
+| `MercadoPublicoModel` | `ChilePublicMarketModel` |
+| `MercadoPublicoError` | `ChilePublicMarketError` |
+
+The default ticket variable is now `CHILE_PUBLIC_MARKET_TICKET`.

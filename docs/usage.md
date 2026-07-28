@@ -8,17 +8,17 @@ sends it in the `ticket` header. The SDK selects the correct mechanism.
 The consumer application owns and supplies the secret:
 
 ```python
-from chile_public_market_sdk import MercadoPublico
+from chile_public_market_sdk import SyncChilePublicMarketSDK
 
-sdk = MercadoPublico(ticket=secret_manager.get("mercado-publico"))
+sdk = SyncChilePublicMarketSDK(ticket=secret_manager.get("mercado-publico"))
 ```
 
 A custom environment variable is also supported:
 
 ```python
-from chile_public_market_sdk import ClientConfig, MercadoPublico
+from chile_public_market_sdk import ClientConfig, SyncChilePublicMarketSDK
 
-sdk = MercadoPublico(config=ClientConfig(ticket_env="MY_TICKET"))
+sdk = SyncChilePublicMarketSDK(config=ClientConfig(ticket_env="MY_TICKET"))
 ```
 
 ## Custom HTTP client
@@ -26,13 +26,13 @@ sdk = MercadoPublico(config=ClientConfig(ticket_env="MY_TICKET"))
 ```python
 import httpx
 
-from chile_public_market_sdk import MercadoPublico
+from chile_public_market_sdk import SyncChilePublicMarketSDK
 
 http_client = httpx.Client(
     timeout=httpx.Timeout(20),
     transport=httpx.HTTPTransport(retries=2),
 )
-sdk = MercadoPublico(ticket="...", http_client=http_client)
+sdk = SyncChilePublicMarketSDK(ticket="...", http_client=http_client)
 ```
 
 When an HTTP client is injected, its creator remains responsible for closing

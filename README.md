@@ -22,15 +22,15 @@ pip install mercado-publico-chile-sdk
 The SDK never includes or manages tickets. Pass one explicitly:
 
 ```python
-from chile_public_market_sdk import MercadoPublico
+from chile_public_market_sdk import SyncChilePublicMarketSDK
 
-sdk = MercadoPublico(ticket="YOUR_TICKET")
+sdk = SyncChilePublicMarketSDK(ticket="YOUR_TICKET")
 ```
 
-Or define `MERCADO_PUBLICO_TICKET`:
+Or define `CHILE_PUBLIC_MARKET_TICKET`:
 
 ```bash
-export MERCADO_PUBLICO_TICKET="YOUR_TICKET"
+export CHILE_PUBLIC_MARKET_TICKET="YOUR_TICKET"
 ```
 
 Git ignores `.env` and `env.yaml`. Loading them through Docker Compose,
@@ -42,10 +42,10 @@ consumer application's responsibility.
 ```python
 from datetime import date
 
-from chile_public_market_sdk import MercadoPublico
+from chile_public_market_sdk import SyncChilePublicMarketSDK
 from chile_public_market_sdk.enums import TenderStatus
 
-with MercadoPublico() as sdk:
+with SyncChilePublicMarketSDK() as sdk:
     response = sdk.get_tenders(
         date=date(2026, 6, 12),
         status=TenderStatus.PUBLISHED,
@@ -63,12 +63,12 @@ with MercadoPublico() as sdk:
 ```python
 import asyncio
 
-from chile_public_market_sdk import AsyncMercadoPublico
+from chile_public_market_sdk import AsyncChilePublicMarketSDK
 from chile_public_market_sdk.enums import AgilePurchaseStatus
 
 
 async def main() -> None:
-    async with AsyncMercadoPublico() as sdk:
+    async with AsyncChilePublicMarketSDK() as sdk:
         page = await sdk.get_agile_purchases(
             last_change_ttl_ms=300_000,
             statuses=[AgilePurchaseStatus.PUBLISHED],
@@ -96,9 +96,21 @@ V1 date filters accept a `date` or the original `ddmmyyyy` format. Agile
 Purchase accepts ISO-8601 dates, multiple statuses and regions, pagination,
 and sorting.
 
+## Client classes and API versions
+
+The SDK exposes separate synchronous and asynchronous classes:
+
+- `SyncChilePublicMarketClient` / `SyncChilePublicMarketSDK`
+- `AsyncChilePublicMarketClient` / `AsyncChilePublicMarketSDK`
+
+ChileCompra endpoint contracts are versioned independently under
+`chile_public_market_sdk.api.v1` and `chile_public_market_sdk.api.v2`. Future
+upstream contracts will follow `api.v{version}`. SDK releases remain `0.x`
+until the public Python API is stable enough for `1.0.0`.
+
 ## Errors
 
-Every public exception inherits from `MercadoPublicoError`:
+Every public exception inherits from `ChilePublicMarketError`:
 
 - `ConfigurationError`: no ticket was supplied.
 - `RequestValidationError`: incompatible or invalid filters.

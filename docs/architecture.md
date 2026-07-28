@@ -15,3 +15,12 @@ breaking consumers when ChileCompra adds data.
 
 The Python API is English-only. Spanish names remain internally where required
 by upstream endpoint paths, query parameters, enum values, and JSON keys.
+
+Synchronous and asynchronous usage is explicit at both layers:
+
+- `SyncChilePublicMarketClient` and `AsyncChilePublicMarketClient` provide the
+  HTTP client API.
+- `SyncChilePublicMarketSDK` and `AsyncChilePublicMarketSDK` provide the
+  high-level facades.
+
+Upstream endpoint contracts are isolated in `api/v1.py` and `api/v2.py`.
