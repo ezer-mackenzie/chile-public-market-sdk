@@ -21,6 +21,15 @@ from chile_public_market_sdk import ClientConfig, SyncChilePublicMarketSDK
 sdk = SyncChilePublicMarketSDK(config=ClientConfig(ticket_env="MY_TICKET"))
 ```
 
+The default `env.yaml` integration uses `envyaml`:
+
+```yaml
+CHILE_PUBLIC_MARKET_TICKET: "${CHILE_PUBLIC_MARKET_TICKET}"
+```
+
+Explicit constructor values take precedence over environment variables, which
+take precedence over `env.yaml`.
+
 ## Custom HTTP client
 
 ```python
@@ -51,7 +60,7 @@ other filters because it represents the logical detail operation.
 - `last_change_ttl_ms` cannot be combined with `changed_from` or
   `changed_until`;
 - `external_id` and `query` are mutually exclusive;
-- `page_size` must be between 1 and 50;
+- `page_size` must be between 10 and 50;
 - region codes must be between 1 and 16.
 
 The Agile Purchase API cannot filter by buyer organization. Filter locally

@@ -8,6 +8,7 @@ nav:
   - Usage: usage.md
   - API: api.md
   - Public API: public-api.md
+  - Contract validation: contracts.md
   - Architecture: architecture.md
   - Migration: migration.md
   - Versioning: versioning.md

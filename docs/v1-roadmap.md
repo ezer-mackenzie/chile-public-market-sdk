@@ -13,6 +13,15 @@ milestones are required before declaring `v1.0.0` stable.
 - Public API inventory and signature snapshot tests.
 - One canonical editable version source in `pyproject.toml`.
 
+## Completed in v0.3.0
+
+- Real-service validation for all six endpoint contracts.
+- Anonymized fixtures with documented provenance.
+- Typed detailed tender and purchase-order domain sections.
+- Offline contract regression tests.
+- Optional weekly live-contract CI using a protected secret.
+- `envyaml` development configuration support.
+
 ## Contract completeness
 
 - Validate anonymized real-service fixtures for every endpoint.

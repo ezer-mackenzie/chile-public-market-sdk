@@ -7,6 +7,21 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-28
+
+### Added
+
+- Added `envyaml` support for loading a ticket from `env.yaml`.
+- Added anonymized production contract fixtures for every endpoint family.
+- Added offline contract regression tests and optional scheduled live tests.
+- Added typed tender dates, awards, buyer details, and line-item contracts.
+- Added typed purchase-order dates, financial data, buyer, supplier, and items.
+
+### Fixed
+
+- Enforced the real Agile Purchase page-size range of 10 to 50.
+- Allowed Agile Purchase details without a purchase-order object.
+
 ## [0.2.0] - 2026-07-28
 
 ### Changed
