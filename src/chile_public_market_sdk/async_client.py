@@ -8,6 +8,14 @@ from typing import Any, Self
 
 import httpx
 
+from .api import (
+    V1_BUYERS_PATH,
+    V1_PURCHASE_ORDERS_PATH,
+    V1_SUPPLIERS_PATH,
+    V1_TENDERS_PATH,
+    V2_AGILE_PURCHASES_PATH,
+)
+from .api.v2 import agile_purchase_detail_path
 from .config import ClientConfig
 from .enums import AgilePurchaseSort, AgilePurchaseStatus, PurchaseOrderStatus, TenderStatus
 from .errors import APIError, RequestValidationError
@@ -24,7 +32,7 @@ from .parsers import parse_model
 from .transport import AsyncTransport
 
 
-class AsyncMercadoPublicoClient:
+class AsyncChilePublicMarketClient:
     """Asynchronous HTTP client based on `httpx.AsyncClient`."""
 
     def __init__(
@@ -82,7 +90,7 @@ class AsyncMercadoPublicoClient:
             "CodigoOrganismo": buyer_code,
             "CodigoProveedor": supplier_code,
         }
-        return parse_model(TenderResponse, await self._v1("licitaciones.json", params))
+        return parse_model(TenderResponse, await self._v1(V1_TENDERS_PATH, params))
 
     async def get_purchase_orders(
         self,
@@ -103,7 +111,7 @@ class AsyncMercadoPublicoClient:
             "CodigoProveedor": supplier_code,
         }
         return parse_model(
-            PurchaseOrderResponse, await self._v1("ordenesdecompra.json", params)
+            PurchaseOrderResponse, await self._v1(V1_PURCHASE_ORDERS_PATH, params)
         )
 
     async def find_supplier(self, tax_id: str) -> CompanyResponse:
@@ -112,12 +120,12 @@ class AsyncMercadoPublicoClient:
         if not tax_id.strip():
             raise RequestValidationError("tax_id cannot be empty.")
         payload = await self._v1(
-            "Empresas/BuscarProveedor", {"rutempresaproveedor": tax_id}
+            V1_SUPPLIERS_PATH, {"rutempresaproveedor": tax_id}
         )
         return parse_model(CompanyResponse, payload)
 
     async def get_buyers(self) -> CompanyResponse:
-        return parse_model(CompanyResponse, await self._v1("Empresas/BuscarComprador", {}))
+        return parse_model(CompanyResponse, await self._v1(V1_BUYERS_PATH, {}))
 
     async def get_agile_purchases(
         self,
@@ -169,7 +177,9 @@ class AsyncMercadoPublicoClient:
             "ordenar_por": enum_value(sort_by),
         }
         envelope_type = AgileEnvelope[AgilePurchasePage]
-        envelope = parse_model(envelope_type, await self._v2("compra-agil", params))
+        envelope = parse_model(
+            envelope_type, await self._v2(V2_AGILE_PURCHASES_PATH, params)
+        )
         if envelope.payload is None:
             raise APIError("Agile Purchase returned a successful response without a payload.")
         return envelope.payload
@@ -178,7 +188,9 @@ class AsyncMercadoPublicoClient:
         if not code.strip():
             raise RequestValidationError("code cannot be empty.")
         envelope_type = AgileEnvelope[AgilePurchaseDetail]
-        envelope = parse_model(envelope_type, await self._v2(f"compra-agil/{code}"))
+        envelope = parse_model(
+            envelope_type, await self._v2(agile_purchase_detail_path(code))
+        )
         if envelope.payload is None:
             raise APIError("Agile Purchase returned a successful response without a payload.")
         return envelope.payload

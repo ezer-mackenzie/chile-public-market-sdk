@@ -6,16 +6,16 @@ from typing import Any
 
 from pydantic import Field, model_validator
 
-from .base import MercadoPublicoModel, _normalize_wire_keys
+from .base import ChilePublicMarketModel, _normalize_wire_keys
 
 
-class Company(MercadoPublicoModel):
+class Company(ChilePublicMarketModel):
     company_code: str | int | None = None
     company_name: str | None = None
     tax_id: str | None = None
 
 
-class CompanyResponse(MercadoPublicoModel):
+class CompanyResponse(ChilePublicMarketModel):
     companies: list[Company] = Field(default_factory=list)
 
     @model_validator(mode="before")

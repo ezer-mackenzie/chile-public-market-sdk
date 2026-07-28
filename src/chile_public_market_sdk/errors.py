@@ -5,27 +5,27 @@ from __future__ import annotations
 from typing import Any
 
 
-class MercadoPublicoError(Exception):
+class ChilePublicMarketError(Exception):
     """Base exception for every SDK error."""
 
 
-class ConfigurationError(MercadoPublicoError):
+class ConfigurationError(ChilePublicMarketError):
     """The client configuration is invalid."""
 
 
-class RequestValidationError(MercadoPublicoError, ValueError):
+class RequestValidationError(ChilePublicMarketError, ValueError):
     """The supplied request filters are invalid or incompatible."""
 
 
-class TransportError(MercadoPublicoError):
+class TransportError(ChilePublicMarketError):
     """The client could not communicate with Mercado Público."""
 
 
-class ResponseValidationError(MercadoPublicoError):
+class ResponseValidationError(ChilePublicMarketError):
     """The response does not match the expected contract."""
 
 
-class APIError(MercadoPublicoError):
+class APIError(ChilePublicMarketError):
     """Mercado Público returned an error."""
 
     def __init__(

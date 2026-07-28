@@ -7,11 +7,11 @@ from decimal import Decimal
 
 from pydantic import AliasChoices, Field
 
-from .base import MercadoPublicoModel
+from .base import ChilePublicMarketModel
 from .common import LineItem, Organization
 
 
-class Tender(MercadoPublicoModel):
+class Tender(ChilePublicMarketModel):
     external_code: str = Field(
         validation_alias=AliasChoices("external_code", "code")
     )
@@ -26,7 +26,7 @@ class Tender(MercadoPublicoModel):
     items: list[LineItem] = Field(default_factory=list)
 
 
-class TenderResponse(MercadoPublicoModel):
+class TenderResponse(ChilePublicMarketModel):
     count: int = 0
     created_at: datetime | str | None = None
     version: str | None = None

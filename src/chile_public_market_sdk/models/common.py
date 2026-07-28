@@ -8,17 +8,17 @@ from typing import Any
 
 from pydantic import AliasChoices, Field
 
-from .base import MercadoPublicoModel
+from .base import ChilePublicMarketModel
 
 
-class APIv1Response(MercadoPublicoModel):
+class APIv1Response(ChilePublicMarketModel):
     count: int = 0
     created_at: datetime | str | None = None
     version: str | None = None
     items: list[dict[str, Any]] = Field(default_factory=list)
 
 
-class Organization(MercadoPublicoModel):
+class Organization(ChilePublicMarketModel):
     organization_code: str | int | None = Field(
         default=None,
         validation_alias=AliasChoices("organization_code", "company_code"),
@@ -33,13 +33,13 @@ class Organization(MercadoPublicoModel):
     municipality: str | None = None
 
 
-class Supplier(MercadoPublicoModel):
+class Supplier(ChilePublicMarketModel):
     code: str | int | None = None
     name: str | None = None
     tax_id: str | None = None
 
 
-class LineItem(MercadoPublicoModel):
+class LineItem(ChilePublicMarketModel):
     line_number: int | None = None
     product_code: str | int | None = None
     product_name: str | None = None

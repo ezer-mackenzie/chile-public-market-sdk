@@ -7,11 +7,11 @@ from decimal import Decimal
 
 from pydantic import Field
 
-from .base import MercadoPublicoModel
+from .base import ChilePublicMarketModel
 from .common import LineItem, Organization, Supplier
 
 
-class PurchaseOrder(MercadoPublicoModel):
+class PurchaseOrder(ChilePublicMarketModel):
     code: str
     name: str | None = None
     status_code: int | None = None
@@ -24,7 +24,7 @@ class PurchaseOrder(MercadoPublicoModel):
     items: list[LineItem] = Field(default_factory=list)
 
 
-class PurchaseOrderResponse(MercadoPublicoModel):
+class PurchaseOrderResponse(ChilePublicMarketModel):
     count: int = 0
     created_at: datetime | str | None = None
     version: str | None = None

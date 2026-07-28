@@ -162,7 +162,7 @@ def _normalize_wire_keys(value: Any) -> Any:
     return value
 
 
-class MercadoPublicoModel(BaseModel):
+class ChilePublicMarketModel(BaseModel):
     """Base model for ChileCompra payloads."""
 
     model_config = ConfigDict(extra="allow", populate_by_name=True)

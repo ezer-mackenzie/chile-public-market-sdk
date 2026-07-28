@@ -8,6 +8,14 @@ from typing import Any, Self
 
 import httpx
 
+from .api import (
+    V1_BUYERS_PATH,
+    V1_PURCHASE_ORDERS_PATH,
+    V1_SUPPLIERS_PATH,
+    V1_TENDERS_PATH,
+    V2_AGILE_PURCHASES_PATH,
+)
+from .api.v2 import agile_purchase_detail_path
 from .config import ClientConfig
 from .enums import AgilePurchaseSort, AgilePurchaseStatus, PurchaseOrderStatus, TenderStatus
 from .errors import APIError, RequestValidationError
@@ -24,7 +32,7 @@ from .parsers import parse_model
 from .transport import SyncTransport
 
 
-class MercadoPublicoClient:
+class SyncChilePublicMarketClient:
     """Synchronous HTTP client.
 
     Accepts an optional `httpx.Client` for custom transports and instrumentation.
@@ -87,7 +95,7 @@ class MercadoPublicoClient:
             "CodigoOrganismo": buyer_code,
             "CodigoProveedor": supplier_code,
         }
-        return parse_model(TenderResponse, self._v1("licitaciones.json", params))
+        return parse_model(TenderResponse, self._v1(V1_TENDERS_PATH, params))
 
     def get_purchase_orders(
         self,
@@ -109,20 +117,20 @@ class MercadoPublicoClient:
             "CodigoOrganismo": buyer_code,
             "CodigoProveedor": supplier_code,
         }
-        return parse_model(PurchaseOrderResponse, self._v1("ordenesdecompra.json", params))
+        return parse_model(PurchaseOrderResponse, self._v1(V1_PURCHASE_ORDERS_PATH, params))
 
     def find_supplier(self, tax_id: str) -> CompanyResponse:
         """Find a supplier's internal company code from its Chilean tax ID."""
 
         if not tax_id.strip():
             raise RequestValidationError("tax_id cannot be empty.")
-        payload = self._v1("Empresas/BuscarProveedor", {"rutempresaproveedor": tax_id})
+        payload = self._v1(V1_SUPPLIERS_PATH, {"rutempresaproveedor": tax_id})
         return parse_model(CompanyResponse, payload)
 
     def get_buyers(self) -> CompanyResponse:
         """List every buyer organization registered in Mercado Público."""
 
-        return parse_model(CompanyResponse, self._v1("Empresas/BuscarComprador", {}))
+        return parse_model(CompanyResponse, self._v1(V1_BUYERS_PATH, {}))
 
     def get_agile_purchases(
         self,
@@ -177,7 +185,7 @@ class MercadoPublicoClient:
             "ordenar_por": enum_value(sort_by),
         }
         envelope_type = AgileEnvelope[AgilePurchasePage]
-        envelope = parse_model(envelope_type, self._v2("compra-agil", params))
+        envelope = parse_model(envelope_type, self._v2(V2_AGILE_PURCHASES_PATH, params))
         if envelope.payload is None:
             raise APIError("Agile Purchase returned a successful response without a payload.")
         return envelope.payload
@@ -188,7 +196,7 @@ class MercadoPublicoClient:
         if not code.strip():
             raise RequestValidationError("code cannot be empty.")
         envelope_type = AgileEnvelope[AgilePurchaseDetail]
-        envelope = parse_model(envelope_type, self._v2(f"compra-agil/{code}"))
+        envelope = parse_model(envelope_type, self._v2(agile_purchase_detail_path(code)))
         if envelope.payload is None:
             raise APIError("Agile Purchase returned a successful response without a payload.")
         return envelope.payload

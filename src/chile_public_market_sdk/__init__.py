@@ -1,35 +1,35 @@
 """Python SDK for Chile's Mercado Público APIs."""
 
-from .async_client import AsyncMercadoPublicoClient
-from .client import MercadoPublicoClient
+from .async_client import AsyncChilePublicMarketClient
 from .config import ClientConfig
 from .errors import (
     APIError,
     AuthenticationError,
+    ChilePublicMarketError,
     ConfigurationError,
-    MercadoPublicoError,
     NotFoundError,
     RateLimitError,
     RequestValidationError,
     ResponseValidationError,
     TransportError,
 )
-from .sdk import AsyncMercadoPublico, MercadoPublico
+from .sdk import AsyncChilePublicMarketSDK, SyncChilePublicMarketSDK
+from .sync_client import SyncChilePublicMarketClient
 
 __all__ = [
     "APIError",
-    "AsyncMercadoPublico",
-    "AsyncMercadoPublicoClient",
+    "AsyncChilePublicMarketClient",
+    "AsyncChilePublicMarketSDK",
     "AuthenticationError",
+    "ChilePublicMarketError",
     "ClientConfig",
     "ConfigurationError",
-    "MercadoPublico",
-    "MercadoPublicoClient",
-    "MercadoPublicoError",
     "NotFoundError",
     "RateLimitError",
     "RequestValidationError",
     "ResponseValidationError",
+    "SyncChilePublicMarketClient",
+    "SyncChilePublicMarketSDK",
     "TransportError",
 ]
 

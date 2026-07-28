@@ -6,7 +6,7 @@ from typing import Any
 import httpx
 import pytest
 
-from chile_public_market_sdk import MercadoPublicoClient
+from chile_public_market_sdk import SyncChilePublicMarketClient
 from chile_public_market_sdk.enums import AgilePurchaseStatus, TenderStatus
 from chile_public_market_sdk.errors import (
     AuthenticationError,
@@ -17,9 +17,9 @@ from chile_public_market_sdk.errors import (
 
 
 def test_ticket_is_required(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("MERCADO_PUBLICO_TICKET", raising=False)
+    monkeypatch.delenv("CHILE_PUBLIC_MARKET_TICKET", raising=False)
     with pytest.raises(ConfigurationError):
-        MercadoPublicoClient()
+        SyncChilePublicMarketClient()
 
 
 def test_ticket_can_come_from_environment(
@@ -27,13 +27,13 @@ def test_ticket_can_come_from_environment(
     make_client: Any,
     tender_payload: dict[str, Any],
 ) -> None:
-    monkeypatch.setenv("MERCADO_PUBLICO_TICKET", "environment-ticket")
+    monkeypatch.setenv("CHILE_PUBLIC_MARKET_TICKET", "environment-ticket")
 
     def handler(request: httpx.Request) -> httpx.Response:
         assert request.url.params["ticket"] == "environment-ticket"
         return httpx.Response(200, json=tender_payload)
 
-    sdk = MercadoPublicoClient(http_client=make_client(handler))
+    sdk = SyncChilePublicMarketClient(http_client=make_client(handler))
     assert sdk.get_tenders().count == 1
 
 
@@ -48,7 +48,7 @@ def test_get_tenders_formats_filters_and_validates_response(
         assert request.url.params["ticket"] == "secret"
         return httpx.Response(200, json=tender_payload)
 
-    sdk = MercadoPublicoClient(ticket="secret", http_client=make_client(handler))
+    sdk = SyncChilePublicMarketClient(ticket="secret", http_client=make_client(handler))
     response = sdk.get_tenders(date=date(2026, 6, 12), status=TenderStatus.PUBLISHED)
 
     assert response.items[0].external_code == "1509-5-L114"
@@ -56,7 +56,7 @@ def test_get_tenders_formats_filters_and_validates_response(
 
 
 def test_code_cannot_be_combined_with_other_filters(make_client: Any) -> None:
-    sdk = MercadoPublicoClient(
+    sdk = SyncChilePublicMarketClient(
         ticket="secret",
         http_client=make_client(lambda request: httpx.Response(500)),
     )
@@ -79,7 +79,7 @@ def test_all_v1_company_endpoints(make_client: Any) -> None:
             200, json=[{"CodigoEmpresa": 6945, "NombreEmpresa": "ChileCompra"}]
         )
 
-    sdk = MercadoPublicoClient(ticket="secret", http_client=make_client(handler))
+    sdk = SyncChilePublicMarketClient(ticket="secret", http_client=make_client(handler))
     assert sdk.find_supplier("70.017.820-k").companies[0].company_code == 17793
     assert sdk.get_buyers().companies[0].company_code == 6945
     assert seen == [
@@ -99,7 +99,7 @@ def test_agile_purchase_uses_header_and_filters(
         assert request.url.params["region"] == "13,5"
         return httpx.Response(200, json=agile_page_payload)
 
-    sdk = MercadoPublicoClient(ticket="secret", http_client=make_client(handler))
+    sdk = SyncChilePublicMarketClient(ticket="secret", http_client=make_client(handler))
     page = sdk.get_agile_purchases(
         last_change_ttl_ms=300_000,
         statuses=[AgilePurchaseStatus.PUBLISHED, AgilePurchaseStatus.CLOSED],
@@ -123,7 +123,7 @@ def test_agile_purchase_uses_header_and_filters(
 def test_agile_purchase_validates_filters(
     make_client: Any, kwargs: dict[str, Any], message: str
 ) -> None:
-    sdk = MercadoPublicoClient(
+    sdk = SyncChilePublicMarketClient(
         ticket="secret",
         http_client=make_client(lambda request: httpx.Response(500)),
     )
@@ -148,7 +148,7 @@ def test_http_errors_are_normalized(
             },
         )
 
-    sdk = MercadoPublicoClient(ticket="secret", http_client=make_client(handler))
+    sdk = SyncChilePublicMarketClient(ticket="secret", http_client=make_client(handler))
     with pytest.raises(error_type) as captured:
         sdk.get_agile_purchases()
     assert "secret" not in str(captured.value)
