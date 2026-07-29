@@ -18,13 +18,11 @@ module-level parameter and parser helpers delegate to them for compatibility.
 
 ## Package layout
 
-- `clients/` contains the canonical synchronous and asynchronous clients.
+- `clients/` contains the synchronous and asynchronous clients.
+- `core/` contains shared enums and type aliases without runtime behavior.
 - `config/` contains the client configuration.
 - `sdk/` contains the two high-level facades.
 - `models/` and `api/` retain domain contracts and upstream API versions.
-
-The old `sync_client` and `async_client` modules are compatibility shims. New
-internal code imports clients from `clients.sync` or `clients.async_`.
 
 Models deliberately use `extra="allow"`. Mercado Público operates legacy
 services, and the Agile Purchase guide documents differences between earlier

@@ -16,6 +16,12 @@
 
 ::: chile_public_market_sdk.config.ClientConfig
 
+## Core contracts
+
+::: chile_public_market_sdk.core.enums
+
+::: chile_public_market_sdk.core.types
+
 ## Models
 
 ::: chile_public_market_sdk.models

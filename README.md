@@ -44,7 +44,7 @@ configuration files.
 from datetime import date
 
 from chile_public_market_sdk import SyncChilePublicMarketSDK
-from chile_public_market_sdk.enums import TenderStatus
+from chile_public_market_sdk.core.enums import TenderStatus
 
 with SyncChilePublicMarketSDK() as sdk:
     response = sdk.get_tenders(
@@ -65,7 +65,7 @@ with SyncChilePublicMarketSDK() as sdk:
 import asyncio
 
 from chile_public_market_sdk import AsyncChilePublicMarketSDK
-from chile_public_market_sdk.enums import AgilePurchaseStatus
+from chile_public_market_sdk.core.enums import AgilePurchaseStatus
 
 
 async def main() -> None:
