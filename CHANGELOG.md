@@ -7,6 +7,18 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-07-29
+
+### Changed
+
+- Updated clients to call `ParameterEncoder` and `ResponseParser` methods
+  directly.
+
+### Removed
+
+- Removed module-level aliases and compatibility wrappers for parameter
+  encoding and response parsing.
+
 ## [0.5.0] - 2026-07-29
 
 ### Changed
