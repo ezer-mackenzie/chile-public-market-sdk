@@ -7,6 +7,15 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-07-29
+
+### Changed
+
+- Removed `envyaml` from runtime dependencies and SDK configuration.
+- Limited built-in ticket resolution to an explicit `ticket` or the configured
+  environment variable.
+- Documented consumer-side `envyaml` usage without coupling the SDK to it.
+
 ## [0.3.0] - 2026-07-28
 
 ### Added

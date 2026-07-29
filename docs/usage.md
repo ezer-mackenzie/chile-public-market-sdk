@@ -21,14 +21,21 @@ from chile_public_market_sdk import ClientConfig, SyncChilePublicMarketSDK
 sdk = SyncChilePublicMarketSDK(config=ClientConfig(ticket_env="MY_TICKET"))
 ```
 
-The default `env.yaml` integration uses `envyaml`:
+Applications that use `envyaml` should load the ticket and pass it explicitly:
 
-```yaml
-CHILE_PUBLIC_MARKET_TICKET: "${CHILE_PUBLIC_MARKET_TICKET}"
+```python
+from envyaml import EnvYAML
+
+from chile_public_market_sdk import SyncChilePublicMarketSDK
+
+config = EnvYAML("env.yaml")
+sdk = SyncChilePublicMarketSDK(
+    ticket=config["CHILE_PUBLIC_MARKET_TICKET"],
+)
 ```
 
-Explicit constructor values take precedence over environment variables, which
-take precedence over `env.yaml`.
+`envyaml` is not an SDK dependency. Secret-file loading and lifecycle remain
+the consumer application's responsibility.
 
 ## Custom HTTP client
 

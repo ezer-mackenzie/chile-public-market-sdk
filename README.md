@@ -34,13 +34,9 @@ export CHILE_PUBLIC_MARKET_TICKET="YOUR_TICKET"
 ```
 
 Git ignores `.env` and `env.yaml`. Loading them through Docker Compose,
-Kubernetes, `python-dotenv`, or another secret-management mechanism is the
-consumer application's responsibility.
-
-For local development, the SDK can also load `CHILE_PUBLIC_MARKET_TICKET`
-from `env.yaml` through `envyaml`. Configure a different path with
-`ClientConfig(env_yaml_path=...)`, or disable YAML loading with
-`ClientConfig(env_yaml_path=None)`.
+Kubernetes, `envyaml`, `python-dotenv`, or another secret-management mechanism
+is the consumer application's responsibility. The SDK itself does not read
+configuration files.
 
 ## Synchronous usage
 

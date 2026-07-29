@@ -20,7 +20,7 @@ milestones are required before declaring `v1.0.0` stable.
 - Typed detailed tender and purchase-order domain sections.
 - Offline contract regression tests.
 - Optional weekly live-contract CI using a protected secret.
-- `envyaml` development configuration support.
+- Consumer-owned secret loading with no configuration-file runtime dependency.
 
 ## Contract completeness
 
