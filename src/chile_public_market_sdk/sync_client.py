@@ -16,7 +16,7 @@ from .api import (
     V2_AGILE_PURCHASES_PATH,
 )
 from .api.v2 import agile_purchase_detail_path
-from .config import ClientConfig
+from .config import ClientConfig, TimeoutValue
 from .enums import AgilePurchaseSort, AgilePurchaseStatus, PurchaseOrderStatus, TenderStatus
 from .errors import APIError, RequestValidationError
 from .models import (
@@ -44,13 +44,13 @@ class SyncChilePublicMarketClient:
         *,
         config: ClientConfig | None = None,
         http_client: httpx.Client | None = None,
-        timeout: float = 30.0,
+        timeout: TimeoutValue = 30.0,
     ) -> None:
         self.config = config or ClientConfig(ticket=ticket, timeout=timeout)
         self._ticket = self.config.resolved_ticket()
         self._owns_client = http_client is None
-        client = http_client or httpx.Client(timeout=self.config.timeout)
-        self._transport = SyncTransport(client)
+        client = http_client or httpx.Client(timeout=self.config.httpx_timeout())
+        self._transport = SyncTransport(client, self.config)
 
     def __enter__(self) -> Self:
         return self

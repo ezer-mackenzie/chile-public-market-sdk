@@ -18,12 +18,18 @@ EXPECTED_TOP_LEVEL_EXPORTS = {
     "ChilePublicMarketError",
     "ClientConfig",
     "ConfigurationError",
+    "NetworkError",
     "NotFoundError",
     "RateLimitError",
+    "RequestEvent",
+    "RequestTimeoutError",
     "RequestValidationError",
+    "ResponseEvent",
     "ResponseValidationError",
+    "RetryConfig",
     "SyncChilePublicMarketClient",
     "SyncChilePublicMarketSDK",
+    "TimeoutConfig",
     "TransportError",
 }
 
@@ -73,7 +79,7 @@ def test_sync_and_async_resource_surfaces_match_snapshot() -> None:
 
 def test_runtime_version_matches_distribution_metadata() -> None:
     assert chile_public_market_sdk.__version__ == version("mercado-publico-chile-sdk")
-    assert chile_public_market_sdk.__version__ == "0.3.1"
+    assert chile_public_market_sdk.__version__ == "0.4.0"
 
 
 def test_models_serialize_with_English_field_names() -> None:

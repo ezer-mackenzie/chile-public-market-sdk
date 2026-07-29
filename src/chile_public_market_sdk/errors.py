@@ -21,6 +21,14 @@ class TransportError(ChilePublicMarketError):
     """The client could not communicate with Mercado Público."""
 
 
+class RequestTimeoutError(TransportError):
+    """A Mercado Público request exceeded a configured timeout."""
+
+
+class NetworkError(TransportError):
+    """A connection or network protocol failure interrupted the request."""
+
+
 class ResponseValidationError(ChilePublicMarketError):
     """The response does not match the expected contract."""
 

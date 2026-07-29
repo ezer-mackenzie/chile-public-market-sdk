@@ -3,14 +3,16 @@
 from importlib.metadata import PackageNotFoundError, version
 
 from .async_client import AsyncChilePublicMarketClient
-from .config import ClientConfig
+from .config import ClientConfig, RequestEvent, ResponseEvent, RetryConfig, TimeoutConfig
 from .errors import (
     APIError,
     AuthenticationError,
     ChilePublicMarketError,
     ConfigurationError,
+    NetworkError,
     NotFoundError,
     RateLimitError,
+    RequestTimeoutError,
     RequestValidationError,
     ResponseValidationError,
     TransportError,
@@ -26,12 +28,18 @@ __all__ = [
     "ChilePublicMarketError",
     "ClientConfig",
     "ConfigurationError",
+    "NetworkError",
     "NotFoundError",
     "RateLimitError",
+    "RequestEvent",
+    "RequestTimeoutError",
     "RequestValidationError",
+    "ResponseEvent",
     "ResponseValidationError",
+    "RetryConfig",
     "SyncChilePublicMarketClient",
     "SyncChilePublicMarketSDK",
+    "TimeoutConfig",
     "TransportError",
 ]
 
