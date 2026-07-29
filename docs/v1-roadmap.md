@@ -48,7 +48,15 @@ milestones are required before declaring `v1.0.0` stable.
 - Clean wheel-install smoke tests across the complete platform matrix.
 - Isolated weekly live-contract validation with a protected ticket.
 
-## Release-candidate compatibility
+## Completed in v0.9.0
+
+- SDK facades use composition and instantiate their corresponding client.
+- SDK context managers return the managed client.
+- Endpoint behavior remains exclusively on client classes.
+- Distribution smoke tests derive the installed version from package metadata.
+- Total offline coverage is enforced at 95%.
+
+## v1.0.0 release-candidate compatibility
 
 - Maintain a fixture matrix for historical v1 payload shapes.
 - Freeze supported public import paths and signatures.

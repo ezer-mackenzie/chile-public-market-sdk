@@ -46,17 +46,17 @@ from datetime import date
 from chile_public_market_sdk import SyncChilePublicMarketSDK
 from chile_public_market_sdk.core.enums import TenderStatus
 
-with SyncChilePublicMarketSDK() as sdk:
-    response = sdk.get_tenders(
+with SyncChilePublicMarketSDK() as client:
+    response = client.get_tenders(
         date=date(2026, 6, 12),
         status=TenderStatus.PUBLISHED,
     )
     for tender in response.items:
         print(tender.external_code, tender.name)
 
-    order = sdk.get_purchase_orders(code="2097-241-SE14")
-    supplier = sdk.find_supplier("70.017.820-k")
-    buyers = sdk.get_buyers()
+    order = client.get_purchase_orders(code="2097-241-SE14")
+    supplier = client.find_supplier("70.017.820-k")
+    buyers = client.get_buyers()
 ```
 
 ## Asynchronous usage
@@ -69,13 +69,13 @@ from chile_public_market_sdk.core.enums import AgilePurchaseStatus
 
 
 async def main() -> None:
-    async with AsyncChilePublicMarketSDK() as sdk:
-        page = await sdk.get_agile_purchases(
+    async with AsyncChilePublicMarketSDK() as client:
+        page = await client.get_agile_purchases(
             last_change_ttl_ms=300_000,
             statuses=[AgilePurchaseStatus.PUBLISHED],
             page_size=50,
         )
-        detail = await sdk.get_agile_purchase(page.items[0].code)
+        detail = await client.get_agile_purchase(page.items[0].code)
         print(detail.name)
 
 
@@ -103,6 +103,10 @@ The SDK exposes separate synchronous and asynchronous classes:
 
 - `SyncChilePublicMarketClient` / `SyncChilePublicMarketSDK`
 - `AsyncChilePublicMarketClient` / `AsyncChilePublicMarketSDK`
+
+SDK classes construct and own a client through `sdk.client`. Their context
+managers return that managed client, while endpoint methods remain on client
+classes.
 
 ChileCompra endpoint contracts are versioned independently under
 `chile_public_market_sdk.api.v1` and `chile_public_market_sdk.api.v2`. Future
@@ -138,8 +142,8 @@ config = ClientConfig(
     timeout=httpx.Timeout(connect=5, read=30, write=10, pool=5),
 )
 
-with SyncChilePublicMarketSDK(config=config) as sdk:
-    tenders = sdk.get_tenders()
+with SyncChilePublicMarketSDK(config=config) as client:
+    tenders = client.get_tenders()
 ```
 
 Applications that need retries can inject an HTTPX client configured for their

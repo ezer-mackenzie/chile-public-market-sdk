@@ -12,8 +12,8 @@ Import these names from `chile_public_market_sdk`:
 |---|---|
 | `SyncChilePublicMarketClient` | Low-level synchronous HTTP client |
 | `AsyncChilePublicMarketClient` | Low-level asynchronous HTTP client |
-| `SyncChilePublicMarketSDK` | High-level synchronous facade |
-| `AsyncChilePublicMarketSDK` | High-level asynchronous facade |
+| `SyncChilePublicMarketSDK` | Constructs and owns a synchronous client |
+| `AsyncChilePublicMarketSDK` | Constructs and owns an asynchronous client |
 | `ClientConfig` | Immutable client configuration |
 
 ## Resource methods

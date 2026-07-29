@@ -37,6 +37,29 @@ sdk = SyncChilePublicMarketSDK(
 `envyaml` is not an SDK dependency. Secret-file loading and lifecycle remain
 the consumer application's responsibility.
 
+## SDK and client responsibilities
+
+The SDK constructs and manages a client. Access it through `sdk.client` when
+the SDK is not used as a context manager:
+
+```python
+sdk = SyncChilePublicMarketSDK(ticket="...")
+try:
+    tenders = sdk.client.get_tenders()
+finally:
+    sdk.close()
+```
+
+Context managers return the managed client directly:
+
+```python
+with SyncChilePublicMarketSDK(ticket="...") as client:
+    tenders = client.get_tenders()
+```
+
+Endpoint methods belong to client classes; SDK classes only own construction
+and lifecycle.
+
 ## Custom HTTP client
 
 ```python
