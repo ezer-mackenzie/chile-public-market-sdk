@@ -33,8 +33,8 @@ from ..models import (
     PurchaseOrderResponse,
     TenderResponse,
 )
-from ..params import compact, csv_values, enum_value, iso_datetime, v1_date
-from ..parsers import ResponseParser, parse_model
+from ..params import ParameterEncoder
+from ..parsers import ResponseParser
 
 _NETWORK_ERRORS = (httpx.NetworkError, httpx.ProtocolError, httpx.ProxyError)
 
@@ -88,13 +88,13 @@ class SyncChilePublicMarketClient:
     def _v1(self, path: str, params: dict[str, Any]) -> Any:
         return self._request(
             f"{self.config.base_url_v1.rstrip('/')}/{path}",
-            params={**compact(params), "ticket": self._ticket},
+            params={**ParameterEncoder.compact(params), "ticket": self._ticket},
         )
 
     def _v2(self, path: str, params: dict[str, Any] | None = None) -> Any:
         return self._request(
             f"{self.config.base_url_v2.rstrip('/')}/{path.lstrip('/')}",
-            params=compact(params or {}),
+            params=ParameterEncoder.compact(params or {}),
             headers={"ticket": self._ticket},
         )
 
@@ -113,12 +113,12 @@ class SyncChilePublicMarketClient:
             raise RequestValidationError("code cannot be combined with other filters.")
         params = {
             "codigo": code,
-            "fecha": v1_date(date) if date is not None else None,
-            "estado": enum_value(status) if status is not None else None,
+            "fecha": ParameterEncoder.v1_date(date) if date is not None else None,
+            "estado": ParameterEncoder.enum_value(status) if status is not None else None,
             "CodigoOrganismo": buyer_code,
             "CodigoProveedor": supplier_code,
         }
-        return parse_model(TenderResponse, self._v1(V1_TENDERS_PATH, params))
+        return ResponseParser.parse_model(TenderResponse, self._v1(V1_TENDERS_PATH, params))
 
     def get_purchase_orders(
         self,
@@ -135,12 +135,14 @@ class SyncChilePublicMarketClient:
             raise RequestValidationError("code cannot be combined with other filters.")
         params = {
             "codigo": code,
-            "fecha": v1_date(date) if date is not None else None,
-            "estado": enum_value(status) if status is not None else None,
+            "fecha": ParameterEncoder.v1_date(date) if date is not None else None,
+            "estado": ParameterEncoder.enum_value(status) if status is not None else None,
             "CodigoOrganismo": buyer_code,
             "CodigoProveedor": supplier_code,
         }
-        return parse_model(PurchaseOrderResponse, self._v1(V1_PURCHASE_ORDERS_PATH, params))
+        return ResponseParser.parse_model(
+            PurchaseOrderResponse, self._v1(V1_PURCHASE_ORDERS_PATH, params)
+        )
 
     def find_supplier(self, tax_id: str) -> CompanyResponse:
         """Find a supplier's internal company code from its Chilean tax ID."""
@@ -148,12 +150,12 @@ class SyncChilePublicMarketClient:
         if not tax_id.strip():
             raise RequestValidationError("tax_id cannot be empty.")
         payload = self._v1(V1_SUPPLIERS_PATH, {"rutempresaproveedor": tax_id})
-        return parse_model(CompanyResponse, payload)
+        return ResponseParser.parse_model(CompanyResponse, payload)
 
     def get_buyers(self) -> CompanyResponse:
         """List every buyer organization registered in Mercado Público."""
 
-        return parse_model(CompanyResponse, self._v1(V1_BUYERS_PATH, {}))
+        return ResponseParser.parse_model(CompanyResponse, self._v1(V1_BUYERS_PATH, {}))
 
     def get_agile_purchases(
         self,
@@ -191,24 +193,36 @@ class SyncChilePublicMarketClient:
 
         params = {
             "ttl_cambio_ms": last_change_ttl_ms,
-            "cambio_desde": iso_datetime(changed_from) if changed_from is not None else None,
-            "cambio_hasta": iso_datetime(changed_until) if changed_until is not None else None,
+            "cambio_desde": ParameterEncoder.iso_datetime(changed_from)
+            if changed_from is not None
+            else None,
+            "cambio_hasta": ParameterEncoder.iso_datetime(changed_until)
+            if changed_until is not None
+            else None,
             "publicado_desde": (
-                iso_datetime(published_from) if published_from is not None else None
+                ParameterEncoder.iso_datetime(published_from)
+                if published_from is not None
+                else None
             ),
             "publicado_hasta": (
-                iso_datetime(published_until) if published_until is not None else None
+                ParameterEncoder.iso_datetime(published_until)
+                if published_until is not None
+                else None
             ),
-            "estado": csv_values(statuses) if statuses is not None else None,
-            "region": csv_values(region_values) if region_values is not None else None,
+            "estado": ParameterEncoder.csv_values(statuses) if statuses is not None else None,
+            "region": ParameterEncoder.csv_values(region_values)
+            if region_values is not None
+            else None,
             "id": external_id,
             "q": query,
             "tamano_pagina": page_size,
             "numero_pagina": page_number,
-            "ordenar_por": enum_value(sort_by),
+            "ordenar_por": ParameterEncoder.enum_value(sort_by),
         }
         envelope_type = AgileEnvelope[AgilePurchasePage]
-        envelope = parse_model(envelope_type, self._v2(V2_AGILE_PURCHASES_PATH, params))
+        envelope = ResponseParser.parse_model(
+            envelope_type, self._v2(V2_AGILE_PURCHASES_PATH, params)
+        )
         if envelope.payload is None:
             raise APIError("Agile Purchase returned a successful response without a payload.")
         return envelope.payload
@@ -219,7 +233,9 @@ class SyncChilePublicMarketClient:
         if not code.strip():
             raise RequestValidationError("code cannot be empty.")
         envelope_type = AgileEnvelope[AgilePurchaseDetail]
-        envelope = parse_model(envelope_type, self._v2(agile_purchase_detail_path(code)))
+        envelope = ResponseParser.parse_model(
+            envelope_type, self._v2(agile_purchase_detail_path(code))
+        )
         if envelope.payload is None:
             raise APIError("Agile Purchase returned a successful response without a payload.")
         return envelope.payload

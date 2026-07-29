@@ -93,15 +93,3 @@ class ResponseParser:
         if isinstance(payload, dict) and str(payload.get("success", "")).upper() == "NOK":
             raise cls.api_error(response, payload)
         return payload
-
-
-def decode_json(content: bytes) -> Any:
-    """Compatibility wrapper for JSON response decoding."""
-
-    return ResponseParser.decode_json(content)
-
-
-def parse_model[ModelT: BaseModel](model: type[ModelT], payload: Any) -> ModelT:
-    """Compatibility wrapper for Pydantic response validation."""
-
-    return ResponseParser.parse_model(model, payload)

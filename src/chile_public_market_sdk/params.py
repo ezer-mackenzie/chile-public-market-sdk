@@ -52,10 +52,3 @@ class ParameterEncoder:
     @staticmethod
     def compact(params: dict[str, Any]) -> dict[str, str | int | float]:
         return {key: value for key, value in params.items() if value is not None}
-
-
-v1_date = ParameterEncoder.v1_date
-iso_datetime = ParameterEncoder.iso_datetime
-enum_value = ParameterEncoder.enum_value
-csv_values = ParameterEncoder.csv_values
-compact = ParameterEncoder.compact

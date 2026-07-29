@@ -33,8 +33,8 @@ from ..models import (
     PurchaseOrderResponse,
     TenderResponse,
 )
-from ..params import compact, csv_values, enum_value, iso_datetime, v1_date
-from ..parsers import ResponseParser, parse_model
+from ..params import ParameterEncoder
+from ..parsers import ResponseParser
 
 _NETWORK_ERRORS = (httpx.NetworkError, httpx.ProtocolError, httpx.ProxyError)
 
@@ -53,9 +53,7 @@ class AsyncChilePublicMarketClient:
         self.config = config or ClientConfig(ticket=ticket, timeout=timeout)
         self._ticket = self.config.resolved_ticket()
         self._owns_client = http_client is None
-        self._http_client = http_client or httpx.AsyncClient(
-            timeout=self.config.timeout
-        )
+        self._http_client = http_client or httpx.AsyncClient(timeout=self.config.timeout)
 
     async def __aenter__(self) -> Self:
         return self
@@ -87,13 +85,13 @@ class AsyncChilePublicMarketClient:
     async def _v1(self, path: str, params: dict[str, Any]) -> Any:
         return await self._request(
             f"{self.config.base_url_v1.rstrip('/')}/{path}",
-            params={**compact(params), "ticket": self._ticket},
+            params={**ParameterEncoder.compact(params), "ticket": self._ticket},
         )
 
     async def _v2(self, path: str, params: dict[str, Any] | None = None) -> Any:
         return await self._request(
             f"{self.config.base_url_v2.rstrip('/')}/{path.lstrip('/')}",
-            params=compact(params or {}),
+            params=ParameterEncoder.compact(params or {}),
             headers={"ticket": self._ticket},
         )
 
@@ -110,12 +108,12 @@ class AsyncChilePublicMarketClient:
             raise RequestValidationError("code cannot be combined with other filters.")
         params = {
             "codigo": code,
-            "fecha": v1_date(date) if date is not None else None,
-            "estado": enum_value(status) if status is not None else None,
+            "fecha": ParameterEncoder.v1_date(date) if date is not None else None,
+            "estado": ParameterEncoder.enum_value(status) if status is not None else None,
             "CodigoOrganismo": buyer_code,
             "CodigoProveedor": supplier_code,
         }
-        return parse_model(TenderResponse, await self._v1(V1_TENDERS_PATH, params))
+        return ResponseParser.parse_model(TenderResponse, await self._v1(V1_TENDERS_PATH, params))
 
     async def get_purchase_orders(
         self,
@@ -130,12 +128,12 @@ class AsyncChilePublicMarketClient:
             raise RequestValidationError("code cannot be combined with other filters.")
         params = {
             "codigo": code,
-            "fecha": v1_date(date) if date is not None else None,
-            "estado": enum_value(status) if status is not None else None,
+            "fecha": ParameterEncoder.v1_date(date) if date is not None else None,
+            "estado": ParameterEncoder.enum_value(status) if status is not None else None,
             "CodigoOrganismo": buyer_code,
             "CodigoProveedor": supplier_code,
         }
-        return parse_model(
+        return ResponseParser.parse_model(
             PurchaseOrderResponse, await self._v1(V1_PURCHASE_ORDERS_PATH, params)
         )
 
@@ -144,13 +142,11 @@ class AsyncChilePublicMarketClient:
 
         if not tax_id.strip():
             raise RequestValidationError("tax_id cannot be empty.")
-        payload = await self._v1(
-            V1_SUPPLIERS_PATH, {"rutempresaproveedor": tax_id}
-        )
-        return parse_model(CompanyResponse, payload)
+        payload = await self._v1(V1_SUPPLIERS_PATH, {"rutempresaproveedor": tax_id})
+        return ResponseParser.parse_model(CompanyResponse, payload)
 
     async def get_buyers(self) -> CompanyResponse:
-        return parse_model(CompanyResponse, await self._v1(V1_BUYERS_PATH, {}))
+        return ResponseParser.parse_model(CompanyResponse, await self._v1(V1_BUYERS_PATH, {}))
 
     async def get_agile_purchases(
         self,
@@ -185,24 +181,34 @@ class AsyncChilePublicMarketClient:
             raise RequestValidationError("Each region code must be between 1 and 16.")
         params = {
             "ttl_cambio_ms": last_change_ttl_ms,
-            "cambio_desde": iso_datetime(changed_from) if changed_from is not None else None,
-            "cambio_hasta": iso_datetime(changed_until) if changed_until is not None else None,
+            "cambio_desde": ParameterEncoder.iso_datetime(changed_from)
+            if changed_from is not None
+            else None,
+            "cambio_hasta": ParameterEncoder.iso_datetime(changed_until)
+            if changed_until is not None
+            else None,
             "publicado_desde": (
-                iso_datetime(published_from) if published_from is not None else None
+                ParameterEncoder.iso_datetime(published_from)
+                if published_from is not None
+                else None
             ),
             "publicado_hasta": (
-                iso_datetime(published_until) if published_until is not None else None
+                ParameterEncoder.iso_datetime(published_until)
+                if published_until is not None
+                else None
             ),
-            "estado": csv_values(statuses) if statuses is not None else None,
-            "region": csv_values(region_values) if region_values is not None else None,
+            "estado": ParameterEncoder.csv_values(statuses) if statuses is not None else None,
+            "region": ParameterEncoder.csv_values(region_values)
+            if region_values is not None
+            else None,
             "id": external_id,
             "q": query,
             "tamano_pagina": page_size,
             "numero_pagina": page_number,
-            "ordenar_por": enum_value(sort_by),
+            "ordenar_por": ParameterEncoder.enum_value(sort_by),
         }
         envelope_type = AgileEnvelope[AgilePurchasePage]
-        envelope = parse_model(
+        envelope = ResponseParser.parse_model(
             envelope_type, await self._v2(V2_AGILE_PURCHASES_PATH, params)
         )
         if envelope.payload is None:
@@ -213,7 +219,7 @@ class AsyncChilePublicMarketClient:
         if not code.strip():
             raise RequestValidationError("code cannot be empty.")
         envelope_type = AgileEnvelope[AgilePurchaseDetail]
-        envelope = parse_model(
+        envelope = ResponseParser.parse_model(
             envelope_type, await self._v2(agile_purchase_detail_path(code))
         )
         if envelope.payload is None:
