@@ -7,6 +7,24 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-29
+
+### Added
+
+- Added granular connect, read, write, and pool timeout configuration.
+- Added opt-in retries for transient network failures and retryable HTTP
+  statuses.
+- Added safe request and response observability events with credential-free
+  URLs.
+- Added deterministic `RequestTimeoutError` and `NetworkError` exceptions.
+- Added sync and async resilience regression tests.
+
+### Security
+
+- Redacted the ticket from `ClientConfig` representations and observability
+  events.
+- Required a valid `Retry-After` header before retrying HTTP 429 responses.
+
 ## [0.3.1] - 2026-07-29
 
 ### Changed
