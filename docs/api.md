@@ -16,6 +16,14 @@
 
 ::: chile_public_market_sdk.config.ClientConfig
 
+::: chile_public_market_sdk.config.TimeoutConfig
+
+::: chile_public_market_sdk.config.RetryConfig
+
+::: chile_public_market_sdk.config.RequestEvent
+
+::: chile_public_market_sdk.config.ResponseEvent
+
 ## Models
 
 ::: chile_public_market_sdk.models

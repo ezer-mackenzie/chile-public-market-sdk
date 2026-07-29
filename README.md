@@ -3,7 +3,7 @@
 Unofficial, typed, synchronous and asynchronous Python SDK for Chile's
 [Mercado Público APIs](https://www.chilecompra.cl/api/).
 
-> Status: alpha (`0.2.0`). The upstream services include legacy contracts and
+> Status: alpha (`0.4.0`). The upstream services include legacy contracts and
 > may add fields. Models validate known fields while preserving new ones.
 
 ## Requirements
@@ -119,8 +119,34 @@ Every public exception inherits from `ChilePublicMarketError`:
 - `NotFoundError`: HTTP 404.
 - `RateLimitError`: HTTP 429; exposes `retry_after`.
 - `APIError`: any other API error.
-- `TransportError`: network, DNS, or timeout failure.
+- `RequestTimeoutError`: a configured timeout was exceeded.
+- `NetworkError`: a connection or network protocol failed.
+- `TransportError`: another HTTP transport failure.
 - `ResponseValidationError`: invalid JSON or an unexpected contract.
+
+## Reliability
+
+Retries are opt-in. They cover connection failures and HTTP 429, 500, 502, 503,
+and 504 responses. A 429 response is retried only when the server provides a
+valid `Retry-After` value, which avoids repeatedly consuming a daily quota.
+
+```python
+from chile_public_market_sdk import (
+    ClientConfig,
+    RetryConfig,
+    SyncChilePublicMarketSDK,
+    TimeoutConfig,
+)
+
+config = ClientConfig(
+    ticket="YOUR_TICKET",
+    timeout=TimeoutConfig(connect=5, read=30, write=10, pool=5),
+    retry=RetryConfig(max_attempts=3),
+)
+
+with SyncChilePublicMarketSDK(config=config) as sdk:
+    tenders = sdk.get_tenders()
+```
 
 ## Development
 

@@ -22,18 +22,14 @@ milestones are required before declaring `v1.0.0` stable.
 - Optional weekly live-contract CI using a protected secret.
 - Consumer-owned secret loading with no configuration-file runtime dependency.
 
-## Contract completeness
+## Completed in v0.4.0
 
-- Validate anonymized real-service fixtures for every endpoint.
-- Fully type detailed tender and purchase-order payloads.
-- Run periodic contract tests without exposing the ticket.
-- Document what constitutes a breaking change.
-
-## Reliability
-
-- Define an opt-in retry policy for HTTP 429, 500, and 503.
-- Expose observability hooks that always redact the ticket.
-- Test timeouts, disconnects, malformed JSON, and upstream schema drift.
+- Granular connect, read, write, and pool timeout configuration.
+- Opt-in retries for transient network and server failures.
+- `Retry-After` support without blind daily-quota retries.
+- Sanitized request and response observability hooks.
+- Deterministic timeout and network exception types.
+- Sync and async resilience regression tests.
 
 ## Compatibility
 
