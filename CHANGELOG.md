@@ -7,6 +7,15 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-07-29
+
+### Changed
+
+- Removed the synchronous and asynchronous transport adapters and protocols.
+- Made public clients call HTTPX directly.
+- Retained retry, safe-event, response-validation, and SDK-error policies as
+  private HTTP helpers.
+
 ## [0.4.2] - 2026-07-29
 
 ### Changed
