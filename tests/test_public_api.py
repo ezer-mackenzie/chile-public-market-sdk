@@ -8,6 +8,12 @@ from chile_public_market_sdk import (
     AsyncChilePublicMarketClient,
     SyncChilePublicMarketClient,
 )
+from chile_public_market_sdk.clients import (
+    AsyncChilePublicMarketClient as CanonicalAsyncClient,
+)
+from chile_public_market_sdk.clients import (
+    SyncChilePublicMarketClient as CanonicalSyncClient,
+)
 from chile_public_market_sdk.models import TenderResponse
 
 EXPECTED_TOP_LEVEL_EXPORTS = {
@@ -62,6 +68,8 @@ EXPECTED_RESOURCE_METHODS = {
 
 def test_top_level_public_exports_are_stable() -> None:
     assert set(chile_public_market_sdk.__all__) == EXPECTED_TOP_LEVEL_EXPORTS
+    assert SyncChilePublicMarketClient is CanonicalSyncClient
+    assert AsyncChilePublicMarketClient is CanonicalAsyncClient
 
 
 def test_sync_and_async_resource_surfaces_match_snapshot() -> None:
@@ -75,7 +83,7 @@ def test_sync_and_async_resource_surfaces_match_snapshot() -> None:
 
 def test_runtime_version_matches_distribution_metadata() -> None:
     assert chile_public_market_sdk.__version__ == version("mercado-publico-chile-sdk")
-    assert chile_public_market_sdk.__version__ == "0.6.0"
+    assert chile_public_market_sdk.__version__ == "0.7.0"
 
 
 def test_models_serialize_with_English_field_names() -> None:

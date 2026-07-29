@@ -1,6 +1,6 @@
 [project]
 name = "mercado-publico-chile-sdk"
-version = "0.6.0"
+version = "0.7.0"
 description = "Typed synchronous and asynchronous SDK for Chile's Mercado Público APIs."
 readme = "README.md"
 license = "MIT"
@@ -30,6 +30,7 @@ Repository = "https://github.com/ezer-mackenzie/chile-public-market-sdk"
 [project.optional-dependencies]
 dev = [
     "mypy>=1.11",
+    "pyright>=1.1.411,<2",
     "pytest>=8.3",
     "pytest-asyncio>=0.24",
     "pytest-cov>=5",
@@ -68,3 +69,10 @@ python_version = "3.12"
 strict = true
 plugins = ["pydantic.mypy"]
 packages = ["chile_public_market_sdk"]
+
+[tool.pyright]
+include = ["src"]
+pythonVersion = "3.12"
+typeCheckingMode = "standard"
+venvPath = "."
+venv = ".venv"
