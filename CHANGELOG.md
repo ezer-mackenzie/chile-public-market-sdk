@@ -7,6 +7,19 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-07-29
+
+### Changed
+
+- Moved shared enums and type aliases into `core/`.
+- Made `clients/` the only implementation path for synchronous and
+  asynchronous clients.
+
+### Removed
+
+- Removed the `sync_client.py` and `async_client.py` import shims.
+- Removed the root `enums.py` module.
+
 ## [0.5.1] - 2026-07-29
 
 ### Changed
