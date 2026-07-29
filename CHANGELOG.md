@@ -7,6 +7,26 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-07-29
+
+### Added
+
+- Added Pyright as a development-only static-analysis gate.
+- Added async coverage for every endpoint family.
+- Added cases for invalid dates, logical API errors, non-JSON failures,
+  ticket precedence, network errors, and sync/async timeout parity.
+
+### Changed
+
+- Raised total offline coverage from 88% to 94%.
+- Consolidated the client identity assertion into the public API tests.
+
+### Removed
+
+- Removed a redundant HTTPX integration test and duplicate HTTP 429 test.
+- Removed the standalone architecture test module and obsolete test
+  placeholder.
+
 ## [0.6.0] - 2026-07-29
 
 ### Changed
