@@ -1,12 +1,12 @@
-"""Credential-free transport event construction."""
+"""Credential-free HTTP event construction."""
 
 import httpx
 
 from ..config import RequestEvent, ResponseEvent
 
 
-class TransportEventFactory:
-    """Create credential-free transport observability events."""
+class HttpEventFactory:
+    """Create credential-free HTTP observability events."""
 
     @staticmethod
     def safe_url(url: str) -> str:

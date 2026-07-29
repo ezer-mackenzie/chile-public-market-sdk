@@ -1,4 +1,4 @@
-"""HTTP response decoding and SDK error mapping."""
+"""HTTPX response decoding and SDK error mapping."""
 
 from typing import Any
 
@@ -13,7 +13,7 @@ from ..errors import (
 from ..parsers import ResponseParser
 
 
-class TransportResponseDecoder:
+class HttpResponseDecoder:
     """Decode HTTP responses and map upstream failures to SDK exceptions."""
 
     @staticmethod

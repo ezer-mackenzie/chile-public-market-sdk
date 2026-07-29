@@ -1,4 +1,4 @@
-"""Retry delay calculation."""
+"""HTTP retry delay calculation."""
 
 from datetime import UTC, datetime
 from email.utils import parsedate_to_datetime

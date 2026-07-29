@@ -79,7 +79,7 @@ def test_sync_and_async_resource_surfaces_match_snapshot() -> None:
 
 def test_runtime_version_matches_distribution_metadata() -> None:
     assert chile_public_market_sdk.__version__ == version("mercado-publico-chile-sdk")
-    assert chile_public_market_sdk.__version__ == "0.4.2"
+    assert chile_public_market_sdk.__version__ == "0.4.3"
 
 
 def test_models_serialize_with_English_field_names() -> None:
