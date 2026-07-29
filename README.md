@@ -126,27 +126,24 @@ Every public exception inherits from `ChilePublicMarketError`:
 
 ## Reliability
 
-Retries are opt-in. They cover connection failures and HTTP 429, 500, 502, 503,
-and 504 responses. A 429 response is retried only when the server provides a
-valid `Retry-After` value, which avoids repeatedly consuming a daily quota.
+The SDK uses HTTPX directly. Pass a native `httpx.Timeout` for granular limits:
 
 ```python
-from chile_public_market_sdk import (
-    ClientConfig,
-    RetryConfig,
-    SyncChilePublicMarketSDK,
-    TimeoutConfig,
-)
+import httpx
+
+from chile_public_market_sdk import ClientConfig, SyncChilePublicMarketSDK
 
 config = ClientConfig(
     ticket="YOUR_TICKET",
-    timeout=TimeoutConfig(connect=5, read=30, write=10, pool=5),
-    retry=RetryConfig(max_attempts=3),
+    timeout=httpx.Timeout(connect=5, read=30, write=10, pool=5),
 )
 
 with SyncChilePublicMarketSDK(config=config) as sdk:
     tenders = sdk.get_tenders()
 ```
+
+Applications that need retries can inject an HTTPX client configured for their
+own policy. The SDK does not hide HTTPX behind another transport abstraction.
 
 ## Development
 

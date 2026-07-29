@@ -54,56 +54,25 @@ sdk = SyncChilePublicMarketSDK(ticket="...", http_client=http_client)
 When an HTTP client is injected, its creator remains responsible for closing
 it and its timeout configuration.
 
-## Timeouts and retries
+## Timeouts
 
-Use `TimeoutConfig` to set independent connect, read, write, and connection-pool
-limits. Retries are disabled by default (`max_attempts=1`) and must be enabled
-explicitly:
+Use the native `httpx.Timeout` type to set independent connect, read, write,
+and connection-pool limits:
 
 ```python
-from chile_public_market_sdk import (
-    ClientConfig,
-    RetryConfig,
-    SyncChilePublicMarketSDK,
-    TimeoutConfig,
-)
+import httpx
+
+from chile_public_market_sdk import ClientConfig, SyncChilePublicMarketSDK
 
 config = ClientConfig(
-    timeout=TimeoutConfig(connect=5, read=30, write=10, pool=5),
-    retry=RetryConfig(max_attempts=3, backoff_factor=0.5, max_delay=20),
+    timeout=httpx.Timeout(connect=5, read=30, write=10, pool=5),
 )
 sdk = SyncChilePublicMarketSDK(config=config)
 ```
 
-The policy retries network failures and HTTP 429, 500, 502, 503, and 504
-responses with exponential backoff. HTTP 429 is retried only when a valid
-`Retry-After` header is present. The delay is capped by `max_delay`.
-
-## Safe observability
-
-Request and response hooks receive immutable SDK events. Event URLs never
-contain query parameters or credentials, so the v1 ticket cannot enter logs:
-
-```python
-from chile_public_market_sdk import ClientConfig, RequestEvent, ResponseEvent
-
-
-def on_request(event: RequestEvent) -> None:
-    print(event.method, event.url, event.attempt)
-
-
-def on_response(event: ResponseEvent) -> None:
-    print(event.status_code, event.elapsed_seconds)
-
-
-config = ClientConfig(
-    request_hooks=(on_request,),
-    response_hooks=(on_response,),
-)
-```
-
-Hooks are ordinary synchronous callbacks in both clients. Keep them short and
-non-blocking.
+For retries, custom transports, or HTTP instrumentation, inject a configured
+`httpx.Client` or `httpx.AsyncClient`. The SDK uses that instance directly and
+does not replace its behavior.
 
 ## V1 filters
 
