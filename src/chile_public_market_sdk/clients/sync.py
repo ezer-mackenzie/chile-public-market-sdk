@@ -16,8 +16,14 @@ from ..api import (
     V2_AGILE_PURCHASES_PATH,
 )
 from ..api.v2 import agile_purchase_detail_path
-from ..config import ClientConfig, TimeoutValue
-from ..enums import AgilePurchaseSort, AgilePurchaseStatus, PurchaseOrderStatus, TenderStatus
+from ..config import ClientConfig
+from ..core.enums import (
+    AgilePurchaseSort,
+    AgilePurchaseStatus,
+    PurchaseOrderStatus,
+    TenderStatus,
+)
+from ..core.types import QueryParams, TimeoutValue
 from ..errors import (
     APIError,
     NetworkError,
@@ -72,7 +78,7 @@ class SyncChilePublicMarketClient:
         self,
         url: str,
         *,
-        params: Mapping[str, str | int | float] | None = None,
+        params: QueryParams | None = None,
         headers: Mapping[str, str] | None = None,
     ) -> Any:
         try:

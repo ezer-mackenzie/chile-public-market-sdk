@@ -7,7 +7,7 @@ import httpx
 import pytest
 
 from chile_public_market_sdk import SyncChilePublicMarketClient
-from chile_public_market_sdk.enums import AgilePurchaseStatus, TenderStatus
+from chile_public_market_sdk.core.enums import AgilePurchaseStatus, TenderStatus
 from chile_public_market_sdk.errors import (
     AuthenticationError,
     ConfigurationError,

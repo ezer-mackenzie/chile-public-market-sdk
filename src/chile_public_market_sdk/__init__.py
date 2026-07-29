@@ -2,7 +2,7 @@
 
 from importlib.metadata import PackageNotFoundError, version
 
-from .async_client import AsyncChilePublicMarketClient
+from .clients import AsyncChilePublicMarketClient, SyncChilePublicMarketClient
 from .config import ClientConfig
 from .errors import (
     APIError,
@@ -18,7 +18,6 @@ from .errors import (
     TransportError,
 )
 from .sdk import AsyncChilePublicMarketSDK, SyncChilePublicMarketSDK
-from .sync_client import SyncChilePublicMarketClient
 
 __all__ = [
     "APIError",

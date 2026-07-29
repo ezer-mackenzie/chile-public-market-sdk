@@ -1,6 +1,6 @@
 from datetime import UTC, date, datetime
 
-from chile_public_market_sdk.enums import TenderStatus
+from chile_public_market_sdk.core.enums import TenderStatus
 from chile_public_market_sdk.params import ParameterEncoder
 
 

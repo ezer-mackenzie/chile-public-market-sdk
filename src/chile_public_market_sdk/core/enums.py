@@ -1,4 +1,4 @@
-"""Enumerations documented by Mercado Público."""
+"""Shared enumerations documented by Mercado Público."""
 
 from enum import IntEnum, StrEnum
 

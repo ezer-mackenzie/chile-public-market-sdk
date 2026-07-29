@@ -7,7 +7,7 @@ from decimal import Decimal
 
 from pydantic import Field
 
-from ..enums import AgilePurchaseStatus
+from ..core.enums import AgilePurchaseStatus
 from .base import ChilePublicMarketModel
 
 

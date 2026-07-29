@@ -1,16 +1,18 @@
 import httpx
 
-from chile_public_market_sdk.async_client import AsyncChilePublicMarketClient
+from chile_public_market_sdk import (
+    AsyncChilePublicMarketClient,
+    SyncChilePublicMarketClient,
+)
 from chile_public_market_sdk.clients import (
     AsyncChilePublicMarketClient as CanonicalAsyncClient,
 )
 from chile_public_market_sdk.clients import (
     SyncChilePublicMarketClient as CanonicalSyncClient,
 )
-from chile_public_market_sdk.sync_client import SyncChilePublicMarketClient
 
 
-def test_legacy_client_modules_delegate_to_canonical_packages() -> None:
+def test_top_level_clients_are_the_canonical_package_classes() -> None:
     assert SyncChilePublicMarketClient is CanonicalSyncClient
     assert AsyncChilePublicMarketClient is CanonicalAsyncClient
 
