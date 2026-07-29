@@ -7,6 +7,17 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-07-29
+
+### Changed
+
+- Split clients, SDK facades, configuration, and transports into focused
+  packages and modules.
+- Added structural sync and async transport protocols.
+- Made client lifecycle management depend on transport protocols instead of
+  concrete HTTPX adapter attributes.
+- Retained legacy sync and async client modules as compatibility shims.
+
 ## [0.4.1] - 2026-07-29
 
 ### Changed
