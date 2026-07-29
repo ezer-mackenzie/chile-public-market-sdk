@@ -7,6 +7,18 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-07-29
+
+### Changed
+
+- Changed SDK facades from empty client subclasses to client-owning
+  composition roots.
+- Made SDK context managers return their managed client.
+- Kept endpoint methods exclusively on synchronous and asynchronous clients.
+- Made wheel smoke tests compare runtime and distribution metadata instead of
+  hardcoding a release version.
+- Raised the CI coverage gate to 95%.
+
 ## [0.8.0] - 2026-07-29
 
 ### Added
