@@ -52,6 +52,15 @@ def test_sync_network_failure_has_a_deterministic_public_error() -> None:
     http_client.close()
 
 
+def test_sync_client_context_manager_closes_owned_httpx_client() -> None:
+    client = SyncChilePublicMarketClient(ticket="secret")
+
+    with client as managed_client:
+        assert managed_client is client
+        assert not client._http_client.is_closed
+    assert client._http_client.is_closed
+
+
 @pytest.mark.asyncio
 async def test_async_client_uses_httpx_directly(tender_payload: dict[str, Any]) -> None:
     async def handler(request: httpx.Request) -> httpx.Response:
@@ -62,6 +71,16 @@ async def test_async_client_uses_httpx_directly(tender_payload: dict[str, Any]) 
 
     assert (await client.get_tenders()).count == 1
     await http_client.aclose()
+
+
+@pytest.mark.asyncio
+async def test_async_client_context_manager_closes_owned_httpx_client() -> None:
+    client = AsyncChilePublicMarketClient(ticket="secret")
+
+    async with client as managed_client:
+        assert managed_client is client
+        assert not client._http_client.is_closed
+    assert client._http_client.is_closed
 
 
 @pytest.mark.asyncio
