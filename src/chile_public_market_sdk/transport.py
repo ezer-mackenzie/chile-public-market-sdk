@@ -21,104 +21,135 @@ from .errors import (
     RequestTimeoutError,
     TransportError,
 )
-from .parsers import decode_json
+from .parsers import ResponseParser
 
 Params = Mapping[str, str | int | float]
 _NETWORK_ERRORS = (httpx.NetworkError, httpx.ProtocolError, httpx.ProxyError)
 
 
-def _safe_url(url: str) -> str:
-    """Return a URL without query parameters or credentials."""
+class TransportEventFactory:
+    """Create credential-free transport observability events."""
 
-    parsed = httpx.URL(url)
-    return str(parsed.copy_with(query=None, username=None, password=None))
+    @staticmethod
+    def safe_url(url: str) -> str:
+        parsed = httpx.URL(url)
+        return str(parsed.copy_with(query=None, username=None, password=None))
+
+    @classmethod
+    def request(cls, url: str, attempt: int) -> RequestEvent:
+        return RequestEvent(method="GET", url=cls.safe_url(url), attempt=attempt)
+
+    @classmethod
+    def response(
+        cls,
+        url: str,
+        attempt: int,
+        response: httpx.Response,
+        elapsed_seconds: float,
+    ) -> ResponseEvent:
+        return ResponseEvent(
+            method="GET",
+            url=cls.safe_url(url),
+            attempt=attempt,
+            status_code=response.status_code,
+            elapsed_seconds=elapsed_seconds,
+        )
 
 
-def _retry_after(response: httpx.Response, *, max_delay: float) -> float | None:
-    value = response.headers.get("Retry-After")
-    if value is None:
-        return None
-    try:
-        delay = float(str(value))
-    except ValueError:
+class RetryPolicy:
+    """Calculate bounded retry delays from SDK configuration and responses."""
+
+    @staticmethod
+    def retry_after(response: httpx.Response, *, max_delay: float) -> float | None:
+        value = response.headers.get("Retry-After")
+        if value is None:
+            return None
         try:
-            target = parsedate_to_datetime(value)
-            if target.tzinfo is None:
-                target = target.replace(tzinfo=UTC)
-            delay = (target - datetime.now(UTC)).total_seconds()
-        except (TypeError, ValueError, OverflowError):
+            delay = float(str(value))
+        except ValueError:
+            try:
+                target = parsedate_to_datetime(value)
+                if target.tzinfo is None:
+                    target = target.replace(tzinfo=UTC)
+                delay = (target - datetime.now(UTC)).total_seconds()
+            except (TypeError, ValueError, OverflowError):
+                return None
+        return min(max(delay, 0.0), max_delay)
+
+    @classmethod
+    def delay(
+        cls,
+        config: ClientConfig,
+        attempt: int,
+        response: httpx.Response | None,
+    ) -> float | None:
+        if attempt >= config.retry.max_attempts:
             return None
-    return min(max(delay, 0.0), max_delay)
+        if response is not None:
+            if response.status_code not in config.retry.retry_statuses:
+                return None
+            if response.status_code == 429:
+                return cls.retry_after(response, max_delay=config.retry.max_delay)
+        exponential_delay = config.retry.backoff_factor * float(2 ** (attempt - 1))
+        return min(exponential_delay, config.retry.max_delay)
 
 
-def _retry_delay(
-    config: ClientConfig,
-    attempt: int,
-    response: httpx.Response | None,
-) -> float | None:
-    if attempt >= config.retry.max_attempts:
-        return None
-    if response is not None:
-        if response.status_code not in config.retry.retry_statuses:
-            return None
-        if response.status_code == 429:
-            return _retry_after(response, max_delay=config.retry.max_delay)
-    exponential_delay = config.retry.backoff_factor * float(2 ** (attempt - 1))
-    return min(exponential_delay, config.retry.max_delay)
+class TransportResponseDecoder:
+    """Decode HTTP responses and map upstream failures to SDK exceptions."""
 
+    @staticmethod
+    def api_error(response: httpx.Response, payload: Any) -> APIError:
+        status = response.status_code
+        message = f"Mercado Público returned HTTP {status}."
+        code: str | None = None
+        details: Any = None
 
-def _api_error(response: httpx.Response, payload: Any) -> APIError:
-    status = response.status_code
-    message = f"Mercado Público returned HTTP {status}."
-    code: str | None = None
-    details: Any = None
+        if isinstance(payload, dict):
+            errors = payload.get("errors") or payload.get("Errores")
+            if isinstance(errors, list) and errors and isinstance(errors[0], dict):
+                first = errors[0]
+                code = str(first.get("codigo") or first.get("Codigo") or status)
+                message = str(first.get("mensaje") or first.get("Mensaje") or message)
+                details = first.get("detalle") or first.get("Detalle")
+            else:
+                message = str(
+                    payload.get("mensaje")
+                    or payload.get("Mensaje")
+                    or payload.get("error")
+                    or message
+                )
 
-    if isinstance(payload, dict):
-        errors = payload.get("errors") or payload.get("Errores")
-        if isinstance(errors, list) and errors and isinstance(errors[0], dict):
-            first = errors[0]
-            code = str(first.get("codigo") or first.get("Codigo") or status)
-            message = str(first.get("mensaje") or first.get("Mensaje") or message)
-            details = first.get("detalle") or first.get("Detalle")
-        else:
-            message = str(
-                payload.get("mensaje")
-                or payload.get("Mensaje")
-                or payload.get("error")
-                or message
-            )
+        kwargs = {
+            "status_code": status,
+            "code": code,
+            "details": details,
+            "retry_after": response.headers.get("Retry-After"),
+        }
+        if status in (401, 403):
+            return AuthenticationError(message, **kwargs)
+        if status == 404:
+            return NotFoundError(message, **kwargs)
+        if status == 429:
+            return RateLimitError(message, **kwargs)
+        return APIError(message, **kwargs)
 
-    kwargs = {
-        "status_code": status,
-        "code": code,
-        "details": details,
-        "retry_after": response.headers.get("Retry-After"),
-    }
-    if status in (401, 403):
-        return AuthenticationError(message, **kwargs)
-    if status == 404:
-        return NotFoundError(message, **kwargs)
-    if status == 429:
-        return RateLimitError(message, **kwargs)
-    return APIError(message, **kwargs)
-
-
-def _decode_response(response: httpx.Response) -> Any:
-    try:
-        payload = decode_json(response.content)
-    except Exception:
+    @classmethod
+    def decode(cls, response: httpx.Response) -> Any:
+        try:
+            payload = ResponseParser.decode_json(response.content)
+        except Exception:
+            if response.is_error:
+                raise APIError(
+                    f"Mercado Público returned HTTP {response.status_code}.",
+                    status_code=response.status_code,
+                    retry_after=response.headers.get("Retry-After"),
+                ) from None
+            raise
         if response.is_error:
-            raise APIError(
-                f"Mercado Público returned HTTP {response.status_code}.",
-                status_code=response.status_code,
-                retry_after=response.headers.get("Retry-After"),
-            ) from None
-        raise
-    if response.is_error:
-        raise _api_error(response, payload)
-    if isinstance(payload, dict) and str(payload.get("success", "")).upper() == "NOK":
-        raise _api_error(response, payload)
-    return payload
+            raise cls.api_error(response, payload)
+        if isinstance(payload, dict) and str(payload.get("success", "")).upper() == "NOK":
+            raise cls.api_error(response, payload)
+        return payload
 
 
 class SyncTransport:
@@ -135,9 +166,8 @@ class SyncTransport:
         params: Params | None = None,
         headers: Mapping[str, str] | None = None,
     ) -> Any:
-        safe_url = _safe_url(url)
         for attempt in range(1, self.config.retry.max_attempts + 1):
-            event = RequestEvent(method="GET", url=safe_url, attempt=attempt)
+            event = TransportEventFactory.request(url, attempt)
             for request_hook in self.config.request_hooks:
                 request_hook(event)
             started = time.monotonic()
@@ -148,32 +178,29 @@ class SyncTransport:
                     headers=headers,
                 )
             except httpx.TimeoutException as exc:
-                if _retry_delay(self.config, attempt, None) is not None:
-                    time.sleep(_retry_delay(self.config, attempt, None) or 0)
+                delay = RetryPolicy.delay(self.config, attempt, None)
+                if delay is not None:
+                    time.sleep(delay)
                     continue
                 raise RequestTimeoutError("The Mercado Público request timed out.") from exc
             except _NETWORK_ERRORS as exc:
-                delay = _retry_delay(self.config, attempt, None)
+                delay = RetryPolicy.delay(self.config, attempt, None)
                 if delay is not None:
                     time.sleep(delay)
                     continue
                 raise NetworkError("Could not communicate with Mercado Público.") from exc
             except httpx.HTTPError as exc:
                 raise TransportError("Could not communicate with Mercado Público.") from exc
-            response_event = ResponseEvent(
-                method="GET",
-                url=safe_url,
-                attempt=attempt,
-                status_code=response.status_code,
-                elapsed_seconds=time.monotonic() - started,
+            response_event = TransportEventFactory.response(
+                url, attempt, response, time.monotonic() - started
             )
             for response_hook in self.config.response_hooks:
                 response_hook(response_event)
-            delay = _retry_delay(self.config, attempt, response)
+            delay = RetryPolicy.delay(self.config, attempt, response)
             if delay is not None:
                 time.sleep(delay)
                 continue
-            return _decode_response(response)
+            return TransportResponseDecoder.decode(response)
         raise AssertionError("Retry loop completed without a response.")  # pragma: no cover
 
 
@@ -191,9 +218,8 @@ class AsyncTransport:
         params: Params | None = None,
         headers: Mapping[str, str] | None = None,
     ) -> Any:
-        safe_url = _safe_url(url)
         for attempt in range(1, self.config.retry.max_attempts + 1):
-            event = RequestEvent(method="GET", url=safe_url, attempt=attempt)
+            event = TransportEventFactory.request(url, attempt)
             for request_hook in self.config.request_hooks:
                 request_hook(event)
             started = time.monotonic()
@@ -204,31 +230,27 @@ class AsyncTransport:
                     headers=headers,
                 )
             except httpx.TimeoutException as exc:
-                delay = _retry_delay(self.config, attempt, None)
+                delay = RetryPolicy.delay(self.config, attempt, None)
                 if delay is not None:
                     await asyncio.sleep(delay)
                     continue
                 raise RequestTimeoutError("The Mercado Público request timed out.") from exc
             except _NETWORK_ERRORS as exc:
-                delay = _retry_delay(self.config, attempt, None)
+                delay = RetryPolicy.delay(self.config, attempt, None)
                 if delay is not None:
                     await asyncio.sleep(delay)
                     continue
                 raise NetworkError("Could not communicate with Mercado Público.") from exc
             except httpx.HTTPError as exc:
                 raise TransportError("Could not communicate with Mercado Público.") from exc
-            response_event = ResponseEvent(
-                method="GET",
-                url=safe_url,
-                attempt=attempt,
-                status_code=response.status_code,
-                elapsed_seconds=time.monotonic() - started,
+            response_event = TransportEventFactory.response(
+                url, attempt, response, time.monotonic() - started
             )
             for response_hook in self.config.response_hooks:
                 response_hook(response_event)
-            delay = _retry_delay(self.config, attempt, response)
+            delay = RetryPolicy.delay(self.config, attempt, response)
             if delay is not None:
                 await asyncio.sleep(delay)
                 continue
-            return _decode_response(response)
+            return TransportResponseDecoder.decode(response)
         raise AssertionError("Retry loop completed without a response.")  # pragma: no cover
