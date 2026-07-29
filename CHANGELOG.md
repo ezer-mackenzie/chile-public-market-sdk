@@ -7,6 +7,20 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-29
+
+### Changed
+
+- Simplified synchronous and asynchronous clients to direct HTTPX calls.
+- Replaced SDK timeout and retry abstractions with native `httpx.Timeout` and
+  injectable HTTPX clients.
+- Consolidated response decoding and API error mapping in `ResponseParser`.
+
+### Removed
+
+- Removed `RetryConfig`, `TimeoutConfig`, observability events, retry policy,
+  and the private HTTP helper package.
+
 ## [0.4.3] - 2026-07-29
 
 ### Changed
