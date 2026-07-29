@@ -9,6 +9,18 @@ The SDK separates five responsibilities:
 4. Pydantic models represent the public contracts.
 5. Sync and async clients expose the domain API.
 
+Stateless transformations are grouped in focused classes:
+
+- `ParameterEncoder` owns upstream query-value formatting.
+- `ResponseParser` owns JSON decoding and Pydantic validation.
+- `RetryPolicy` owns retry eligibility and delay calculation.
+- `TransportEventFactory` creates credential-free observability events.
+- `TransportResponseDecoder` maps HTTP payloads to values or SDK exceptions.
+
+These classes use static methods for isolated transformations and class methods
+where one operation composes other behavior from the same class. Existing
+module-level parameter and parser helpers delegate to them for compatibility.
+
 Models deliberately use `extra="allow"`. Mercado Público operates legacy
 services, and the Agile Purchase guide documents differences between earlier
 schemas and real responses. This policy validates known fields without
