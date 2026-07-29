@@ -36,8 +36,12 @@ Synchronous and asynchronous usage is explicit at both layers:
 
 - `SyncChilePublicMarketClient` and `AsyncChilePublicMarketClient` provide the
   HTTP client API.
-- `SyncChilePublicMarketSDK` and `AsyncChilePublicMarketSDK` provide the
-  high-level facades.
+- `SyncChilePublicMarketSDK` and `AsyncChilePublicMarketSDK` construct and own
+  their respective client through the public `client` attribute.
+
+SDK facades use composition rather than inheriting from clients. Their context
+managers return the managed client, and their close methods delegate lifecycle
+management only. Endpoint methods remain defined exclusively on clients.
 
 Upstream endpoint contracts are isolated in `api/v1.py` and `api/v2.py`.
 

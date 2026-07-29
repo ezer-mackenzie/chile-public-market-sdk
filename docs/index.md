@@ -8,8 +8,8 @@ Mercado Público endpoint.
 ```python
 from chile_public_market_sdk import SyncChilePublicMarketSDK
 
-with SyncChilePublicMarketSDK(ticket="YOUR_TICKET") as sdk:
-    response = sdk.get_tenders(code="1509-5-L114")
+with SyncChilePublicMarketSDK(ticket="YOUR_TICKET") as client:
+    response = client.get_tenders(code="1509-5-L114")
     print(response.items[0].name)
 ```
 
