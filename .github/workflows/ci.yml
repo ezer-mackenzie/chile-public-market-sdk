@@ -48,7 +48,7 @@ jobs:
       - uses: snok/install-poetry@v1
       - run: poetry config virtualenvs.in-project true
       - run: poetry install --extras "dev"
-      - run: poetry run pytest -m "not live" --cov=chile_public_market_sdk --cov-fail-under=90
+      - run: poetry run pytest -m "not live" --cov=chile_public_market_sdk --cov-fail-under=95
 
   build:
     name: Build distributions
@@ -90,8 +90,9 @@ jobs:
           subprocess.check_call([sys.executable, '-m', 'pip', 'install', glob.glob('dist/*.whl')[0]])"
       - name: Verify installed package
         run: >-
-          python -c "import chile_public_market_sdk as sdk;
-          assert sdk.__version__ == '0.8.0';
+          python -c "from importlib.metadata import version;
+          import chile_public_market_sdk as sdk;
+          assert sdk.__version__ == version('mercado-publico-chile-sdk');
           assert sdk.SyncChilePublicMarketClient;
           assert sdk.AsyncChilePublicMarketClient"
 
