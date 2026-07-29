@@ -7,6 +7,21 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-07-29
+
+### Added
+
+- Added Python 3.12, 3.13, and 3.14 test jobs on Linux, macOS, and Windows.
+- Added clean wheel installation smoke tests across the complete platform
+  matrix.
+- Added Pyright, MkDocs, and 90% coverage CI gates.
+
+### Changed
+
+- Build wheel and sdist artifacts once per workflow and reuse the wheel for
+  smoke tests.
+- Isolated scheduled live contracts from the offline test matrix.
+
 ## [0.7.0] - 2026-07-29
 
 ### Added
