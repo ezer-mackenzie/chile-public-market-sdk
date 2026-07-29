@@ -363,21 +363,6 @@ files = [
 toml = ["tomli ; python_full_version <= \"3.11.0a6\""]
 
 [[package]]
-name = "envyaml"
-version = "1.10.211231"
-description = "Simple YAML configuration file parser with easy access for structured data"
-optional = false
-python-versions = ">=2.7"
-groups = ["main"]
-files = [
-    {file = "envyaml-1.10.211231-py2.py3-none-any.whl", hash = "sha256:8d7a7a6be12587cc5da32a587067506b47b849f4643981099ad148015a72de52"},
-    {file = "envyaml-1.10.211231.tar.gz", hash = "sha256:88f8a076159e3c317d3450a5f404132b6ac91aecee4934ea72eac65f911f1244"},
-]
-
-[package.dependencies]
-PyYAML = "*"
-
-[[package]]
 name = "ghp-import"
 version = "2.1.0"
 description = "Copy your docs directly to the gh-pages branch."
@@ -1348,9 +1333,10 @@ six = ">=1.5"
 name = "pyyaml"
 version = "6.0.3"
 description = "YAML parser and emitter for Python"
-optional = false
+optional = true
 python-versions = ">=3.8"
 groups = ["main"]
+markers = "extra == \"docs\""
 files = [
     {file = "PyYAML-6.0.3-cp38-cp38-macosx_10_13_x86_64.whl", hash = "sha256:c2514fceb77bc5e7a2f7adfaa1feb2fb311607c9cb518dbc378688ec73d8292f"},
     {file = "PyYAML-6.0.3-cp38-cp38-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:9c57bb8c96f6d1808c030b1687b9b5fb476abaa47f0db9c0101f5e9f394e97f4"},
@@ -1605,4 +1591,4 @@ docs = ["mkdocs", "mkdocs-material", "mkdocstrings"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "1197772e9ddedf91f8dda91246ffa2fc7ff0b970318c1c25a5c6bd2953b88764"
+content-hash = "6525b4ad9b4229cea722df9e103237279c4b71c7fd41470976ce0e902baec699"

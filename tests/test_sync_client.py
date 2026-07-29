@@ -6,7 +6,7 @@ from typing import Any
 import httpx
 import pytest
 
-from chile_public_market_sdk import ClientConfig, SyncChilePublicMarketClient
+from chile_public_market_sdk import SyncChilePublicMarketClient
 from chile_public_market_sdk.enums import AgilePurchaseStatus, TenderStatus
 from chile_public_market_sdk.errors import (
     AuthenticationError,
@@ -19,23 +19,7 @@ from chile_public_market_sdk.errors import (
 def test_ticket_is_required(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("CHILE_PUBLIC_MARKET_TICKET", raising=False)
     with pytest.raises(ConfigurationError):
-        SyncChilePublicMarketClient(config=ClientConfig(env_yaml_path=None))
-
-
-def test_ticket_can_come_from_env_yaml(tmp_path: Any, make_client: Any) -> None:
-    path = tmp_path / "env.yaml"
-    path.write_text('CHILE_PUBLIC_MARKET_TICKET: "yaml-ticket"\n', encoding="utf-8")
-
-    def handler(request: httpx.Request) -> httpx.Response:
-        assert request.url.params["ticket"] == "yaml-ticket"
-        return httpx.Response(200, json={"Cantidad": 0, "Listado": []})
-
-    sdk = SyncChilePublicMarketClient(
-        config=ClientConfig(env_yaml_path=path),
-        http_client=make_client(handler),
-    )
-
-    assert sdk.get_tenders().count == 0
+        SyncChilePublicMarketClient()
 
 
 def test_ticket_can_come_from_environment(
