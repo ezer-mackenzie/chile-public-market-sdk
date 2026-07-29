@@ -152,6 +152,7 @@ poetry install --extras "dev docs"
 poetry run pytest
 poetry run ruff check .
 poetry run mypy
+poetry run pyright
 poetry build
 ```
 

@@ -31,6 +31,14 @@ milestones are required before declaring `v1.0.0` stable.
 - Deterministic timeout and network exception types.
 - Sync and async resilience regression tests.
 
+## Completed in v0.7.0
+
+- Direct HTTPX integration without transport wrappers.
+- Canonical `clients/` and shared `core/` package boundaries.
+- Ruff, strict mypy, and Pyright static-analysis gates.
+- Expanded sync/async, parser, parameter, network, and error coverage.
+- More than 90% total offline test coverage.
+
 ## Compatibility
 
 - Run CI on Python 3.12, 3.13, and 3.14.
