@@ -1,6 +1,6 @@
 [project]
 name = "mercado-publico-chile-sdk"
-version = "0.4.0"
+version = "0.4.1"
 description = "Typed synchronous and asynchronous SDK for Chile's Mercado Público APIs."
 readme = "README.md"
 license = "MIT"

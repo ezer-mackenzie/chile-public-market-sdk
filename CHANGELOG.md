@@ -7,6 +7,16 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-07-29
+
+### Changed
+
+- Encapsulated response decoding and Pydantic validation in `ResponseParser`.
+- Encapsulated request formatting in `ParameterEncoder`.
+- Encapsulated retry calculations, safe event construction, and HTTP response
+  decoding in dedicated transport classes.
+- Preserved the existing function-based helpers as compatibility delegates.
+
 ## [0.4.0] - 2026-07-29
 
 ### Added
