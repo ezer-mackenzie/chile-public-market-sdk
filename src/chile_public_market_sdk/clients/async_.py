@@ -2,17 +2,12 @@
 
 from __future__ import annotations
 
-import asyncio
-import time
 from collections.abc import Iterable, Mapping
 from datetime import date, datetime
 from typing import Any, Self
 
 import httpx
 
-from .._http.events import HttpEventFactory
-from .._http.response import HttpResponseDecoder
-from .._http.retry import RetryPolicy
 from ..api import (
     V1_BUYERS_PATH,
     V1_PURCHASE_ORDERS_PATH,
@@ -39,7 +34,7 @@ from ..models import (
     TenderResponse,
 )
 from ..params import compact, csv_values, enum_value, iso_datetime, v1_date
-from ..parsers import parse_model
+from ..parsers import ResponseParser, parse_model
 
 _NETWORK_ERRORS = (httpx.NetworkError, httpx.ProtocolError, httpx.ProxyError)
 
@@ -59,7 +54,7 @@ class AsyncChilePublicMarketClient:
         self._ticket = self.config.resolved_ticket()
         self._owns_client = http_client is None
         self._http_client = http_client or httpx.AsyncClient(
-            timeout=self.config.httpx_timeout()
+            timeout=self.config.timeout
         )
 
     async def __aenter__(self) -> Self:
@@ -79,38 +74,15 @@ class AsyncChilePublicMarketClient:
         params: Mapping[str, str | int | float] | None = None,
         headers: Mapping[str, str] | None = None,
     ) -> Any:
-        for attempt in range(1, self.config.retry.max_attempts + 1):
-            request_event = HttpEventFactory.request(url, attempt)
-            for request_hook in self.config.request_hooks:
-                request_hook(request_event)
-            started = time.monotonic()
-            try:
-                response = await self._http_client.get(url, params=params, headers=headers)
-            except httpx.TimeoutException as exc:
-                delay = RetryPolicy.delay(self.config, attempt, None)
-                if delay is not None:
-                    await asyncio.sleep(delay)
-                    continue
-                raise RequestTimeoutError("The Mercado Público request timed out.") from exc
-            except _NETWORK_ERRORS as exc:
-                delay = RetryPolicy.delay(self.config, attempt, None)
-                if delay is not None:
-                    await asyncio.sleep(delay)
-                    continue
-                raise NetworkError("Could not communicate with Mercado Público.") from exc
-            except httpx.HTTPError as exc:
-                raise TransportError("Could not communicate with Mercado Público.") from exc
-            response_event = HttpEventFactory.response(
-                url, attempt, response, time.monotonic() - started
-            )
-            for response_hook in self.config.response_hooks:
-                response_hook(response_event)
-            delay = RetryPolicy.delay(self.config, attempt, response)
-            if delay is not None:
-                await asyncio.sleep(delay)
-                continue
-            return HttpResponseDecoder.decode(response)
-        raise AssertionError("Retry loop completed without a response.")  # pragma: no cover
+        try:
+            response = await self._http_client.get(url, params=params, headers=headers)
+        except httpx.TimeoutException as exc:
+            raise RequestTimeoutError("The Mercado Público request timed out.") from exc
+        except _NETWORK_ERRORS as exc:
+            raise NetworkError("Could not communicate with Mercado Público.") from exc
+        except httpx.HTTPError as exc:
+            raise TransportError("Could not communicate with Mercado Público.") from exc
+        return ResponseParser.decode_response(response)
 
     async def _v1(self, path: str, params: dict[str, Any]) -> Any:
         return await self._request(
