@@ -39,11 +39,19 @@ milestones are required before declaring `v1.0.0` stable.
 - Expanded sync/async, parser, parameter, network, and error coverage.
 - More than 90% total offline test coverage.
 
-## Compatibility
+## Completed in v0.8.0
 
-- Run CI on Python 3.12, 3.13, and 3.14.
-- Test wheels on Linux, macOS, and Windows.
+- CI matrix for Python 3.12, 3.13, and 3.14.
+- Offline tests on Linux, macOS, and Windows.
+- Ruff, strict mypy, Pyright, MkDocs, and coverage gates.
+- One canonical distribution build per workflow.
+- Clean wheel-install smoke tests across the complete platform matrix.
+- Isolated weekly live-contract validation with a protected ticket.
+
+## Release-candidate compatibility
+
 - Maintain a fixture matrix for historical v1 payload shapes.
+- Freeze supported public import paths and signatures.
 
 ## Distribution
 
