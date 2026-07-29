@@ -2,12 +2,12 @@
 
 ## Clients
 
-::: chile_public_market_sdk.sync_client.SyncChilePublicMarketClient
+::: chile_public_market_sdk.clients.sync.SyncChilePublicMarketClient
     options:
       show_source: false
       members_order: source
 
-::: chile_public_market_sdk.async_client.AsyncChilePublicMarketClient
+::: chile_public_market_sdk.clients.async_.AsyncChilePublicMarketClient
     options:
       show_source: false
       members_order: source
