@@ -39,9 +39,7 @@ class TenderAward(ChilePublicMarketModel):
 
 
 class Tender(ChilePublicMarketModel):
-    external_code: str = Field(
-        validation_alias=AliasChoices("external_code", "code")
-    )
+    external_code: str = Field(validation_alias=AliasChoices("external_code", "code"))
     name: str | None = None
     status_code: int | None = None
     status: str | None = None
