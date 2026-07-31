@@ -7,6 +7,19 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.9.1] - 2026-07-31
+
+### Changed
+
+- Moved the upstream wire-key table into an immutable `models/wire_keys.py`
+  mapping.
+- Made `ChilePublicMarketModel.normalize_payload` the shared normalization
+  interface for base and shape-specific model validators.
+
+### Removed
+
+- Removed the private cross-module `_normalize_wire_keys` function.
+
 ## [0.9.0] - 2026-07-29
 
 ### Changed
