@@ -29,6 +29,12 @@ services, and the Agile Purchase guide documents differences between earlier
 schemas and real responses. This policy validates known fields without
 breaking consumers when ChileCompra adds data.
 
+`ChilePublicMarketModel` owns recursive payload normalization through
+`normalize_payload`. The immutable upstream-to-English key table lives
+separately in `models/wire_keys.py`, keeping protocol data out of base-model
+behavior. Shape-specific validators reuse the base-model interface rather than
+importing private normalization functions.
+
 The Python API is English-only. Spanish names remain internally where required
 by upstream endpoint paths, query parameters, enum values, and JSON keys.
 
