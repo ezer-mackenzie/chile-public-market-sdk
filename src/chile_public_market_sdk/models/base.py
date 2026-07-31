@@ -6,7 +6,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
-from .wire_keys import WIRE_KEY_MAP
+from ..core.constants.wire_keys import WIRE_KEY_MAP
 
 
 class ChilePublicMarketModel(BaseModel):

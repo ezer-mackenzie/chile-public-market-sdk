@@ -1,8 +1,8 @@
 import pytest
 
+from chile_public_market_sdk.core.constants.wire_keys import WIRE_KEY_MAP
 from chile_public_market_sdk.models.base import ChilePublicMarketModel
 from chile_public_market_sdk.models.companies import CompanyResponse
-from chile_public_market_sdk.models.wire_keys import WIRE_KEY_MAP
 
 
 def test_base_model_normalizes_nested_wire_keys_and_preserves_unknown_keys() -> None:
@@ -24,9 +24,7 @@ def test_base_model_normalizes_nested_wire_keys_and_preserves_unknown_keys() -> 
 
 
 def test_company_shape_normalization_uses_the_base_model_interface() -> None:
-    response = CompanyResponse.model_validate(
-        {"CodigoEmpresa": 10, "NombreEmpresa": "Supplier"}
-    )
+    response = CompanyResponse.model_validate({"CodigoEmpresa": 10, "NombreEmpresa": "Supplier"})
 
     assert response.companies[0].company_code == 10
     assert response.companies[0].company_name == "Supplier"
