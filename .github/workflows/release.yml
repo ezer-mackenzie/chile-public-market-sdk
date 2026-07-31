@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Build and publish
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: snok/install-poetry@v1
+      - name: Verify tag and project versions
+        run: >-
+          python -c "import os, tomllib;
+          expected = os.environ['GITHUB_REF_NAME'].removeprefix('v');
+          actual = tomllib.load(open('pyproject.toml', 'rb'))['project']['version'];
+          assert actual == expected, (actual, expected)"
+      - run: poetry build
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: "dist/*"
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          attestations: true
