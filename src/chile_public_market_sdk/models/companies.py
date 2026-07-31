@@ -6,7 +6,7 @@ from typing import Any
 
 from pydantic import Field, model_validator
 
-from .base import ChilePublicMarketModel, _normalize_wire_keys
+from .base import ChilePublicMarketModel
 
 
 class Company(ChilePublicMarketModel):
@@ -21,7 +21,7 @@ class CompanyResponse(ChilePublicMarketModel):
     @model_validator(mode="before")
     @classmethod
     def normalize_shape(cls, value: Any) -> Any:
-        normalized = _normalize_wire_keys(value)
+        normalized = cls.normalize_payload(value)
 
         if isinstance(normalized, list):
             return {"companies": normalized}
