@@ -1,0 +1,41 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  pypi-publish:
+    name: Upload to PyPI
+    runs-on: ubuntu-latest
+
+    environment: pypi
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+
+      - name: Build package
+        run: python -m build
+
+      - name: Validate wheel install
+        run: |
+          python -m venv /tmp/chile-public-market-sdk-publish-test
+          /tmp/chile-public-market-sdk-publish-test/bin/python -m pip install --upgrade pip
+          /tmp/chile-public-market-sdk-publish-test/bin/python -m pip install dist/*.whl
+          /tmp/chile-public-market-sdk-publish-test/bin/python -c "import chile_public_market_sdk; from chile_public_market_sdk import ClientConfig, SyncChilePublicMarketClient, SyncChilePublicMarketSDK; from chile_public_market_sdk.models import TenderResponse; print(chile_public_market_sdk.__version__, SyncChilePublicMarketSDK.__name__, SyncChilePublicMarketClient.__name__, ClientConfig.__name__, TenderResponse.__name__)"
+
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@release/v1

@@ -36,8 +36,8 @@ The repository-side stability gates for `v1.0.0` are complete.
 ## Distribution gates
 
 - `CHANGELOG.md` records the stable release.
-- The release workflow builds wheel and sdist artifacts from an exact version
-  tag, creates build provenance, and publishes through PyPI Trusted Publishing.
+- The publish workflow builds wheel and sdist artifacts when a GitHub Release is
+  published, then uploads them through PyPI Trusted Publishing.
 - The repository owner must configure the `pypi` GitHub environment and the
   matching PyPI Trusted Publisher before pushing the stable tag.
 - Versioned documentation hosting remains a repository-owner deployment task.
