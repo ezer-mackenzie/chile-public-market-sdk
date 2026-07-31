@@ -1,6 +1,6 @@
 [project]
 name = "mercado-publico-chile-sdk"
-version = "0.9.3"
+version = "1.0.0"
 description = "Typed synchronous and asynchronous SDK for Chile's Mercado Público APIs."
 readme = "README.md"
 license = "MIT"
@@ -14,7 +14,7 @@ dependencies = [
     "pydantic>=2.8,<3",
 ]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",

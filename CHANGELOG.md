@@ -7,6 +7,24 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-07-31
+
+### Added
+
+- Added stable synchronous and asynchronous `get_buyers()` examples.
+- Added the public support, compatibility, and deprecation policy.
+- Added tag-driven PyPI Trusted Publishing with build provenance.
+- Added regression snapshots for constructors and model exports.
+- Added sync and async coverage for validation, missing payloads, transport
+  failures, and injected-client ownership.
+
+### Changed
+
+- Declared the documented Python API stable under Semantic Versioning.
+- Updated architecture, versioning, security, migration, and roadmap guidance
+  for the final package layout and `1.x` compatibility contract.
+- Raised offline coverage to more than 98%, with both client modules above 95%.
+
 ## [0.9.3] - 2026-07-31
 
 ### Changed
