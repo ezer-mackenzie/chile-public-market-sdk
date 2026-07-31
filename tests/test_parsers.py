@@ -6,6 +6,7 @@ from chile_public_market_sdk.errors import (
     APIError,
     AuthenticationError,
     NotFoundError,
+    RateLimitError,
     ResponseValidationError,
 )
 from chile_public_market_sdk.parsers import ResponseParser
@@ -60,3 +61,62 @@ def test_response_parser_handles_non_json_error_and_nok_success() -> None:
         ResponseParser.decode_response(
             httpx.Response(200, json={"success": "NOK", "error": "logical failure"})
         )
+
+
+def test_parser_inputs_are_positional_only() -> None:
+    with pytest.raises(TypeError):
+        ResponseParser.decode_json(content=b"{}")  # type: ignore[call-arg]
+
+    with pytest.raises(TypeError):
+        ResponseParser.decode_response(response=httpx.Response(200, json={}))  # type: ignore[call-arg]
+
+
+def test_api_error_accepts_metadata_overrides_after_positional_inputs() -> None:
+    response = httpx.Response(429, headers={"Retry-After": "30"})
+    payload = {
+        "errors": [
+            {
+                "codigo": "upstream-code",
+                "mensaje": "Upstream message",
+                "detalle": "Upstream details",
+            }
+        ]
+    }
+
+    error = ResponseParser.api_error(
+        response,
+        payload,
+        message="Custom message",
+        code="custom-code",
+        details={"source": "caller"},
+        retry_after="60",
+    )
+
+    assert isinstance(error, RateLimitError)
+    assert str(error) == "Custom message"
+    assert error.code == "custom-code"
+    assert error.details == {"source": "caller"}
+    assert error.retry_after == "60"
+
+
+def test_api_error_formats_its_default_message() -> None:
+    error = ResponseParser.api_error(httpx.Response(500), {})
+
+    assert str(error) == "Mercado Público returned HTTP 500."
+
+
+@pytest.mark.parametrize(
+    ("status_code", "error_type"),
+    [
+        (401, AuthenticationError),
+        (403, AuthenticationError),
+        (404, NotFoundError),
+        (429, RateLimitError),
+        (500, APIError),
+    ],
+)
+def test_error_is_built_from_status_code(
+    status_code: int,
+    error_type: type[APIError],
+) -> None:
+    assert isinstance(ResponseParser._build_error(status_code, "failure"), error_type)
