@@ -10,6 +10,7 @@ from chile_public_market_sdk import (
     RequestTimeoutError,
     SyncChilePublicMarketClient,
 )
+from chile_public_market_sdk.core.constants.config import DEFAULT_TICKET_ENV
 
 
 def test_config_repr_redacts_ticket_and_accepts_httpx_timeout() -> None:
@@ -23,7 +24,7 @@ def test_config_repr_redacts_ticket_and_accepts_httpx_timeout() -> None:
 def test_explicit_ticket_takes_precedence_over_environment(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setenv("CHILE_PUBLIC_MARKET_TICKET", "environment")
+    monkeypatch.setenv(DEFAULT_TICKET_ENV, "environment")
 
     assert ClientConfig(ticket=" explicit ").resolved_ticket() == "explicit"
 

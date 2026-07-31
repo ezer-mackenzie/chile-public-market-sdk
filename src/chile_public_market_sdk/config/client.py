@@ -3,11 +3,10 @@
 import os
 from dataclasses import dataclass, field
 
-from ..api import V1_BASE_URL, V2_BASE_URL
+from ..core.constants.api import V1_BASE_URL, V2_BASE_URL
+from ..core.constants.config import DEFAULT_TICKET_ENV
 from ..core.types import TimeoutValue
 from ..errors import ConfigurationError
-
-DEFAULT_TICKET_ENV = "CHILE_PUBLIC_MARKET_TICKET"
 
 
 @dataclass(frozen=True, slots=True)

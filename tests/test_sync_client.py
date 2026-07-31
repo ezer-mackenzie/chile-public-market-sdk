@@ -7,6 +7,7 @@ import httpx
 import pytest
 
 from chile_public_market_sdk import SyncChilePublicMarketClient
+from chile_public_market_sdk.core.constants.config import DEFAULT_TICKET_ENV
 from chile_public_market_sdk.core.enums import AgilePurchaseStatus, TenderStatus
 from chile_public_market_sdk.errors import (
     AuthenticationError,
@@ -17,7 +18,7 @@ from chile_public_market_sdk.errors import (
 
 
 def test_ticket_is_required(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("CHILE_PUBLIC_MARKET_TICKET", raising=False)
+    monkeypatch.delenv(DEFAULT_TICKET_ENV, raising=False)
     with pytest.raises(ConfigurationError):
         SyncChilePublicMarketClient()
 
@@ -27,7 +28,7 @@ def test_ticket_can_come_from_environment(
     make_client: Any,
     tender_payload: dict[str, Any],
 ) -> None:
-    monkeypatch.setenv("CHILE_PUBLIC_MARKET_TICKET", "environment-ticket")
+    monkeypatch.setenv(DEFAULT_TICKET_ENV, "environment-ticket")
 
     def handler(request: httpx.Request) -> httpx.Response:
         assert request.url.params["ticket"] == "environment-ticket"
@@ -75,9 +76,7 @@ def test_all_v1_company_endpoints(make_client: Any) -> None:
                 200,
                 json={"CodigoEmpresa": 17793, "NombreEmpresa": "Proveedor", "Rut": "70.017.820-k"},
             )
-        return httpx.Response(
-            200, json=[{"CodigoEmpresa": 6945, "NombreEmpresa": "ChileCompra"}]
-        )
+        return httpx.Response(200, json=[{"CodigoEmpresa": 6945, "NombreEmpresa": "ChileCompra"}])
 
     sdk = SyncChilePublicMarketClient(ticket="secret", http_client=make_client(handler))
     assert sdk.find_supplier("70.017.820-k").companies[0].company_code == 17793

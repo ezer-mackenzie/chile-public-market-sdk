@@ -1,7 +1,6 @@
 """Mercado Público upstream API v2 contract."""
 
-V2_BASE_URL = "https://api2.mercadopublico.cl/v2"
-V2_AGILE_PURCHASES_PATH = "compra-agil"
+from ..core.constants.api import V2_AGILE_PURCHASES_PATH
 
 
 def agile_purchase_detail_path(code: str) -> str:

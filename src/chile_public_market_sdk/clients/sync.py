@@ -8,15 +8,16 @@ from typing import Any, Self
 
 import httpx
 
-from ..api import (
+from ..api.v2 import agile_purchase_detail_path
+from ..config import ClientConfig
+from ..core.constants.api import (
     V1_BUYERS_PATH,
     V1_PURCHASE_ORDERS_PATH,
     V1_SUPPLIERS_PATH,
     V1_TENDERS_PATH,
     V2_AGILE_PURCHASES_PATH,
 )
-from ..api.v2 import agile_purchase_detail_path
-from ..config import ClientConfig
+from ..core.constants.http import NETWORK_ERRORS
 from ..core.enums import (
     AgilePurchaseSort,
     AgilePurchaseStatus,
@@ -41,8 +42,6 @@ from ..models import (
 )
 from ..params import ParameterEncoder
 from ..parsers import ResponseParser
-
-_NETWORK_ERRORS = (httpx.NetworkError, httpx.ProtocolError, httpx.ProxyError)
 
 
 class SyncChilePublicMarketClient:
@@ -85,7 +84,7 @@ class SyncChilePublicMarketClient:
             response = self._http_client.get(url, params=params, headers=headers)
         except httpx.TimeoutException as exc:
             raise RequestTimeoutError("The Mercado Público request timed out.") from exc
-        except _NETWORK_ERRORS as exc:
+        except NETWORK_ERRORS as exc:
             raise NetworkError("Could not communicate with Mercado Público.") from exc
         except httpx.HTTPError as exc:
             raise TransportError("Could not communicate with Mercado Público.") from exc
