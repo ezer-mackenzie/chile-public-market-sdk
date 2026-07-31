@@ -7,6 +7,17 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.9.3] - 2026-07-31
+
+### Changed
+
+- Made response parser inputs positional-only and allowed explicit API error
+  metadata overrides.
+- Extracted API error construction into a focused private parser method.
+- Centralized API URLs, endpoint paths, ticket configuration, HTTPX network
+  exceptions, and wire-key mappings under `core/constants/`.
+- Kept dynamic API path construction separate from fixed protocol constants.
+
 ## [0.9.2] - 2026-07-31
 
 ### Changed
