@@ -2,6 +2,8 @@
 
 [![codecov](https://codecov.io/gh/ezer-mackenzie/chile-public-market-sdk/graph/badge.svg)](https://codecov.io/gh/ezer-mackenzie/chile-public-market-sdk)
 
+[![Publish to PyPI](https://github.com/ezer-mackenzie/chile-public-market-sdk/actions/workflows/publish.yml/badge.svg)](https://github.com/ezer-mackenzie/chile-public-market-sdk/actions/workflows/publish.yml)
+
 Unofficial, typed, synchronous and asynchronous Python SDK for Chile's
 [Mercado Público APIs](https://www.chilecompra.cl/api/).
 
