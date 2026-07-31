@@ -1,8 +1,7 @@
 # Public API inventory
 
-This page defines the intended public Python surface for the `0.2.x` line.
-Anything not listed here should be treated as internal until explicitly
-promoted.
+This page defines the stable public Python surface for the `1.x` line. Anything
+not listed here is internal until explicitly promoted.
 
 ## Top-level classes
 
@@ -36,6 +35,8 @@ asynchronous clients use `async with` and `aclose()`.
 - `ConfigurationError`
 - `RequestValidationError`
 - `TransportError`
+- `RequestTimeoutError`
+- `NetworkError`
 - `ResponseValidationError`
 - `APIError`
 - `AuthenticationError`
@@ -60,3 +61,6 @@ models use `extra="allow"`.
 
 `chile_public_market_sdk.__version__` is read from installed package metadata.
 `pyproject.toml` is the single version source used to build that metadata.
+
+Changes to this inventory follow the [support and deprecation
+policy](support.md).

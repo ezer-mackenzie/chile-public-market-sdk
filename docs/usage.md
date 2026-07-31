@@ -13,6 +13,47 @@ from chile_public_market_sdk import SyncChilePublicMarketSDK
 sdk = SyncChilePublicMarketSDK(ticket=secret_manager.get("mercado-publico"))
 ```
 
+## Synchronous example
+
+```python
+from chile_public_market_sdk import SyncChilePublicMarketSDK
+
+ticket = "YOUR_TICKET"
+
+with SyncChilePublicMarketSDK(ticket=ticket) as client:
+    response = client.get_buyers()
+
+    print(f"Companies found: {len(response.companies)}")
+    for company in response.companies[:5]:
+        print(company.company_code, company.company_name)
+```
+
+## Asynchronous example
+
+```python
+import asyncio
+
+from chile_public_market_sdk import AsyncChilePublicMarketSDK
+
+
+async def main() -> None:
+    ticket = "YOUR_TICKET"
+
+    async with AsyncChilePublicMarketSDK(ticket=ticket) as client:
+        response = await client.get_buyers()
+
+        print(f"Companies found: {len(response.companies)}")
+        for company in response.companies[:5]:
+            print(company.company_code, company.company_name)
+
+
+asyncio.run(main())
+```
+
+Use a placeholder only in documentation. Production applications should read
+the ticket from an environment variable or secret manager and must never
+commit it to source control.
+
 A custom environment variable is also supported:
 
 ```python

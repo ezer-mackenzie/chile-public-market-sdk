@@ -18,16 +18,18 @@ The package exposes its current release through
 ## Upstream API versions
 
 ChileCompra currently exposes different resources through upstream API v1 and
-v2. Their paths and base URLs live in explicit modules:
+v2. Their fixed paths and base URLs live together in:
 
 ```text
-chile_public_market_sdk/api/v1.py
-chile_public_market_sdk/api/v2.py
+chile_public_market_sdk/core/constants/api.py
 ```
 
-New upstream contracts must be added as `api/v{version}.py`. Client methods
-must import paths and base URLs from those modules instead of embedding
-versioned URLs directly.
+Dynamic path builders live in version-specific modules such as `api/v2.py`.
+Client methods import fixed values from `core/constants/api.py` instead of
+embedding upstream URLs directly.
 
 An upstream v2 endpoint does not imply SDK version 2.0.0. Likewise, SDK
 version 1.0.0 may support multiple ChileCompra API versions.
+
+See the [support and deprecation policy](support.md) for the compatibility
+guarantees that apply after `1.0.0`.

@@ -15,5 +15,6 @@ The SDK accepts a ticket from the consumer and does not persist it. `.env` and
 `env.yaml` are ignored, but consumers should prefer a dedicated secret manager
 in production. Exceptions, logs, fixtures, and bug reports must redact tickets.
 
-Only supported, non-yanked releases receive security fixes. A formal support
-window will be published before version 1.0.0.
+Only supported, non-yanked releases receive security fixes. See
+[`docs/support.md`](docs/support.md) for the release support window and
+deprecation policy.

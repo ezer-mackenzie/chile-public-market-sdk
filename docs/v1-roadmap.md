@@ -1,80 +1,50 @@
 # Roadmap to v1.0.0
 
-Version `0.2.0` establishes the English public API, architecture boundaries,
-serialization policy, and public-surface regression tests. The following
-milestones are required before declaring `v1.0.0` stable.
+The repository-side stability gates for `v1.0.0` are complete.
 
-## Completed in v0.2.0
+## Stable product contract
 
-- English-only public classes, methods, parameters, attributes, and docs.
-- Separate synchronous and asynchronous clients and facades.
-- Versioned upstream API contracts under `api/v{version}.py`.
-- English model serialization with Spanish wire-key normalization.
-- Public API inventory and signature snapshot tests.
-- One canonical editable version source in `pyproject.toml`.
+- Every documented public Mercado Público endpoint has equivalent synchronous
+  and asynchronous client methods.
+- HTTPX is used directly, with injectable sync and async clients.
+- Pydantic validates known fields, normalizes upstream wire keys to English,
+  and preserves compatible upstream additions.
+- SDK facades construct and own their corresponding clients.
+- Consumers supply tickets directly or through their own secret-loading
+  mechanism.
 
-## Completed in v0.3.0
+## Compatibility gates
 
-- Real-service validation for all six endpoint contracts.
-- Anonymized fixtures with documented provenance.
-- Typed detailed tender and purchase-order domain sections.
-- Offline contract regression tests.
-- Optional weekly live-contract CI using a protected secret.
-- Consumer-owned secret loading with no configuration-file runtime dependency.
+- Top-level exports, model exports, constructors, and resource method
+  signatures have regression snapshots.
+- Historical v1 and current v2 payload fixtures are validated offline.
+- The public compatibility, support, deprecation, migration, and security
+  policies are documented.
+- Removing a documented public contract after `1.0.0` requires a new major
+  release.
 
-## Completed in v0.4.0
+## Quality gates
 
-- Granular connect, read, write, and pool timeout configuration.
-- Opt-in retries for transient network and server failures.
-- `Retry-After` support without blind daily-quota retries.
-- Sanitized request and response observability hooks.
-- Deterministic timeout and network exception types.
-- Sync and async resilience regression tests.
+- Python 3.12, 3.13, and 3.14 are covered by the CI matrix on Linux, macOS,
+  and Windows.
+- Ruff, strict mypy, Pyright, MkDocs strict mode, wheel builds, and clean wheel
+  installation are required in CI.
+- Offline coverage exceeds 95%; each sync and async client exceeds 85%.
+- Protected live tests cover all endpoint families without committing raw
+  responses or tickets.
 
-## Completed in v0.7.0
+## Distribution gates
 
-- Direct HTTPX integration without transport wrappers.
-- Canonical `clients/` and shared `core/` package boundaries.
-- Ruff, strict mypy, and Pyright static-analysis gates.
-- Expanded sync/async, parser, parameter, network, and error coverage.
-- More than 90% total offline test coverage.
+- `CHANGELOG.md` records the stable release.
+- The release workflow builds wheel and sdist artifacts from an exact version
+  tag, creates build provenance, and publishes through PyPI Trusted Publishing.
+- The repository owner must configure the `pypi` GitHub environment and the
+  matching PyPI Trusted Publisher before pushing the stable tag.
+- Versioned documentation hosting remains a repository-owner deployment task.
 
-## Completed in v0.8.0
+## Definition of stable
 
-- CI matrix for Python 3.12, 3.13, and 3.14.
-- Offline tests on Linux, macOS, and Windows.
-- Ruff, strict mypy, Pyright, MkDocs, and coverage gates.
-- One canonical distribution build per workflow.
-- Clean wheel-install smoke tests across the complete platform matrix.
-- Isolated weekly live-contract validation with a protected ticket.
-
-## Completed in v0.9.0
-
-- SDK facades use composition and instantiate their corresponding client.
-- SDK context managers return the managed client.
-- Endpoint behavior remains exclusively on client classes.
-- Distribution smoke tests derive the installed version from package metadata.
-- Total offline coverage is enforced at 95%.
-
-## v1.0.0 release-candidate compatibility
-
-- Maintain a fixture matrix for historical v1 payload shapes.
-- Freeze supported public import paths and signatures.
-
-## Distribution
-
-- Confirm the distribution name on PyPI.
-- Configure Trusted Publishing.
-- Add a changelog and signed or provenance-attested releases.
-- Publish versioned documentation.
-
-## Quality and governance
-
-- Reach at least 90% coverage, especially in the async client.
-- Review and freeze all public names and docstrings.
-- Publish support and deprecation policies.
-- Complete license, attribution, and security reviews.
-
-The detailed engineering roadmap and release gates are maintained outside the
-repository at `/tmp/chile-public-market-sdk-v1-roadmap.md` during this planning
-cycle.
+After `v1.0.0`, removals or renames of documented methods, parameters, model
+fields, enums, exceptions, imports, or serialized English field names require
+a new major version. Compatible additions ship in minor releases and compatible
+fixes ship in patch releases.

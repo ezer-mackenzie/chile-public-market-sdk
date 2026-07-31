@@ -9,8 +9,8 @@ Mercado Público endpoint.
 from chile_public_market_sdk import SyncChilePublicMarketSDK
 
 with SyncChilePublicMarketSDK(ticket="YOUR_TICKET") as client:
-    response = client.get_tenders(code="1509-5-L114")
-    print(response.items[0].name)
+    response = client.get_buyers()
+    print(f"Companies found: {len(response.companies)}")
 ```
 
 The ticket may be omitted when `CHILE_PUBLIC_MARKET_TICKET` is defined.

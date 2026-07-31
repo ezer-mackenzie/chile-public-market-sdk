@@ -12,6 +12,7 @@ nav:
   - Architecture: architecture.md
   - Migration: migration.md
   - Versioning: versioning.md
+  - Support policy: support.md
   - Roadmap to v1.0.0: v1-roadmap.md
 plugins:
   - search

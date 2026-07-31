@@ -3,7 +3,7 @@
 Unofficial, typed, synchronous and asynchronous Python SDK for Chile's
 [Mercado Público APIs](https://www.chilecompra.cl/api/).
 
-> Status: alpha (`0.4.0`). The upstream services include legacy contracts and
+> Status: stable (`1.0.0`). The upstream services include legacy contracts and
 > may add fields. Models validate known fields while preserving new ones.
 
 ## Requirements
@@ -41,22 +41,16 @@ configuration files.
 ## Synchronous usage
 
 ```python
-from datetime import date
-
 from chile_public_market_sdk import SyncChilePublicMarketSDK
-from chile_public_market_sdk.core.enums import TenderStatus
 
-with SyncChilePublicMarketSDK() as client:
-    response = client.get_tenders(
-        date=date(2026, 6, 12),
-        status=TenderStatus.PUBLISHED,
-    )
-    for tender in response.items:
-        print(tender.external_code, tender.name)
+ticket = "YOUR_TICKET"
 
-    order = client.get_purchase_orders(code="2097-241-SE14")
-    supplier = client.find_supplier("70.017.820-k")
-    buyers = client.get_buyers()
+with SyncChilePublicMarketSDK(ticket=ticket) as client:
+    response = client.get_buyers()
+
+    print(f"Companies found: {len(response.companies)}")
+    for company in response.companies[:5]:
+        print(company.company_code, company.company_name)
 ```
 
 ## Asynchronous usage
@@ -65,18 +59,17 @@ with SyncChilePublicMarketSDK() as client:
 import asyncio
 
 from chile_public_market_sdk import AsyncChilePublicMarketSDK
-from chile_public_market_sdk.core.enums import AgilePurchaseStatus
 
 
 async def main() -> None:
-    async with AsyncChilePublicMarketSDK() as client:
-        page = await client.get_agile_purchases(
-            last_change_ttl_ms=300_000,
-            statuses=[AgilePurchaseStatus.PUBLISHED],
-            page_size=50,
-        )
-        detail = await client.get_agile_purchase(page.items[0].code)
-        print(detail.name)
+    ticket = "YOUR_TICKET"
+
+    async with AsyncChilePublicMarketSDK(ticket=ticket) as client:
+        response = await client.get_buyers()
+
+        print(f"Companies found: {len(response.companies)}")
+        for company in response.companies[:5]:
+            print(company.company_code, company.company_name)
 
 
 asyncio.run(main())
@@ -108,10 +101,10 @@ SDK classes construct and own a client through `sdk.client`. Their context
 managers return that managed client, while endpoint methods remain on client
 classes.
 
-ChileCompra endpoint contracts are versioned independently under
-`chile_public_market_sdk.api.v1` and `chile_public_market_sdk.api.v2`. Future
-upstream contracts will follow `api.v{version}`. SDK releases remain `0.x`
-until the public Python API is stable enough for `1.0.0`.
+ChileCompra endpoint constants are grouped by upstream version in
+`chile_public_market_sdk.core.constants.api`. Dynamic version-specific path
+builders live under `chile_public_market_sdk.api`. SDK releases follow
+Semantic Versioning independently from ChileCompra's upstream versions.
 
 ## Errors
 

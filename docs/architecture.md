@@ -12,17 +12,17 @@ Stateless transformations are grouped in focused classes:
 
 - `ParameterEncoder` owns upstream query-value formatting.
 - `ResponseParser` owns JSON decoding and Pydantic validation.
+
 These classes use static methods for isolated transformations and class methods
-where one operation composes other behavior from the same class. Existing
-module-level parameter and parser helpers delegate to them for compatibility.
+where one operation composes other behavior from the same class.
 
 ## Package layout
 
 - `clients/` contains the synchronous and asynchronous clients.
-- `core/` contains shared enums and type aliases without runtime behavior.
+- `core/` contains shared enums, type aliases, and immutable constants.
 - `config/` contains the client configuration.
 - `sdk/` contains the two high-level facades.
-- `models/` and `api/` retain domain contracts and upstream API versions.
+- `models/` contains domain contracts and `api/` contains dynamic path helpers.
 
 Models deliberately use `extra="allow"`. Mercado Público operates legacy
 services, and the Agile Purchase guide documents differences between earlier
@@ -31,9 +31,9 @@ breaking consumers when ChileCompra adds data.
 
 `ChilePublicMarketModel` owns recursive payload normalization through
 `normalize_payload`. The immutable upstream-to-English key table lives
-separately in `core/constants/wire_keys.py`, keeping protocol data out of base-model
-behavior. Shape-specific validators reuse the base-model interface rather than
-importing private normalization functions.
+separately in `core/constants/wire_keys.py`, keeping protocol data out of
+base-model behavior. Shape-specific validators reuse the base-model interface
+rather than importing private normalization functions.
 
 The Python API is English-only. Spanish names remain internally where required
 by upstream endpoint paths, query parameters, enum values, and JSON keys.
@@ -49,7 +49,8 @@ SDK facades use composition rather than inheriting from clients. Their context
 managers return the managed client, and their close methods delegate lifecycle
 management only. Endpoint methods remain defined exclusively on clients.
 
-Upstream endpoint contracts are isolated in `api/v1.py` and `api/v2.py`.
+Fixed upstream URLs and paths are isolated in `core/constants/api.py`.
+Version-specific dynamic path construction remains under `api/v{version}.py`.
 
 There is no SDK transport abstraction. Synchronous clients call `httpx.Client`
 directly and asynchronous clients call `httpx.AsyncClient` directly. HTTPX owns
