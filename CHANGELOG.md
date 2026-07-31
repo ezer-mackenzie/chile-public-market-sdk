@@ -7,6 +7,19 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-07-31
+
+### Added
+
+- Added Codecov project and patch coverage gates with tokenless OIDC uploads.
+- Added a Codecov badge to the README.
+- Added a prominent warning that the SDK is an unofficial community
+  initiative with no ChileCompra or Mercado Público endorsement.
+
+### Fixed
+
+- Restored the valid `actions/checkout@v4` reference in the test matrix.
+
 ## [1.0.0] - 2026-07-31
 
 ### Added
