@@ -45,8 +45,7 @@ class ParameterEncoder:
     @classmethod
     def csv_values(cls, values: Iterable[Enum | str | int]) -> str:
         return ",".join(
-            cls.enum_value(value) if not isinstance(value, int) else str(value)
-            for value in values
+            cls.enum_value(value) if not isinstance(value, int) else str(value) for value in values
         )
 
     @staticmethod

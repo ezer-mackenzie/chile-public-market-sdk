@@ -32,6 +32,7 @@ def tender_payload() -> dict[str, Any]:
         ],
     }
 
+
 @pytest.fixture
 def agile_page_payload() -> dict[str, Any]:
     return {
