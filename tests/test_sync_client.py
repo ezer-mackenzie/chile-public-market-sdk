@@ -10,6 +10,7 @@ from chile_public_market_sdk import SyncChilePublicMarketClient
 from chile_public_market_sdk.core.constants.config import DEFAULT_TICKET_ENV
 from chile_public_market_sdk.core.enums import AgilePurchaseStatus, TenderStatus
 from chile_public_market_sdk.errors import (
+    APIError,
     AuthenticationError,
     ConfigurationError,
     RateLimitError,
@@ -64,6 +65,9 @@ def test_code_cannot_be_combined_with_other_filters(make_client: Any) -> None:
     with pytest.raises(RequestValidationError):
         sdk.get_tenders(code="1", date="12062026")
 
+    with pytest.raises(RequestValidationError):
+        sdk.get_purchase_orders(code="1", date="12062026")
+
 
 def test_all_v1_company_endpoints(make_client: Any) -> None:
     seen: list[str] = []
@@ -116,6 +120,7 @@ def test_agile_purchase_uses_header_and_filters(
         ),
         ({"external_id": "code", "query": "text"}, "mutually"),
         ({"page_size": 9}, "page_size"),
+        ({"page_number": 0}, "page_number"),
         ({"regions": [17]}, "region"),
     ],
 )
@@ -151,3 +156,29 @@ def test_http_errors_are_normalized(
     with pytest.raises(error_type) as captured:
         sdk.get_agile_purchases()
     assert "secret" not in str(captured.value)
+
+
+def test_sync_rejects_empty_resource_identifiers(make_client: Any) -> None:
+    client = SyncChilePublicMarketClient(
+        ticket="secret",
+        http_client=make_client(lambda request: httpx.Response(500)),
+    )
+
+    with pytest.raises(RequestValidationError, match="tax_id cannot be empty"):
+        client.find_supplier(" ")
+    with pytest.raises(RequestValidationError, match="code cannot be empty"):
+        client.get_agile_purchase(" ")
+
+
+def test_sync_agile_purchase_requires_payload(make_client: Any) -> None:
+    client = SyncChilePublicMarketClient(
+        ticket="secret",
+        http_client=make_client(
+            lambda request: httpx.Response(200, json={"success": "OK", "payload": None})
+        ),
+    )
+
+    with pytest.raises(APIError, match="without a payload"):
+        client.get_agile_purchases()
+    with pytest.raises(APIError, match="without a payload"):
+        client.get_agile_purchase("1057539-228-COT26")

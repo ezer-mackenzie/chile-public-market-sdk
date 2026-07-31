@@ -9,6 +9,7 @@ from chile_public_market_sdk import (
     NetworkError,
     RequestTimeoutError,
     SyncChilePublicMarketClient,
+    TransportError,
 )
 from chile_public_market_sdk.core.constants.config import DEFAULT_TICKET_ENV
 
@@ -49,6 +50,18 @@ def test_sync_network_failure_has_a_deterministic_public_error() -> None:
     client = SyncChilePublicMarketClient(ticket="secret", http_client=http_client)
 
     with pytest.raises(NetworkError, match="communicate"):
+        client.get_tenders()
+    http_client.close()
+
+
+def test_sync_http_failure_has_a_deterministic_public_error() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        raise httpx.HTTPError("HTTP failed")
+
+    http_client = httpx.Client(transport=httpx.MockTransport(handler))
+    client = SyncChilePublicMarketClient(ticket="secret", http_client=http_client)
+
+    with pytest.raises(TransportError, match="communicate"):
         client.get_tenders()
     http_client.close()
 
@@ -95,3 +108,44 @@ async def test_async_timeout_has_the_same_public_error() -> None:
     with pytest.raises(RequestTimeoutError, match="timed out"):
         await client.get_tenders()
     await http_client.aclose()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("upstream_error", "public_error"),
+    [
+        (httpx.ConnectError("connection failed"), NetworkError),
+        (httpx.HTTPError("HTTP failed"), TransportError),
+    ],
+)
+async def test_async_transport_failures_are_normalized(
+    upstream_error: httpx.HTTPError,
+    public_error: type[Exception],
+) -> None:
+    async def handler(request: httpx.Request) -> httpx.Response:
+        raise upstream_error
+
+    http_client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+    client = AsyncChilePublicMarketClient(ticket="secret", http_client=http_client)
+
+    with pytest.raises(public_error, match="communicate"):
+        await client.get_tenders()
+    await http_client.aclose()
+
+
+@pytest.mark.asyncio
+async def test_clients_do_not_close_injected_httpx_clients() -> None:
+    sync_http_client = httpx.Client(
+        transport=httpx.MockTransport(lambda request: httpx.Response(200))
+    )
+    async_http_client = httpx.AsyncClient(
+        transport=httpx.MockTransport(lambda request: httpx.Response(200))
+    )
+
+    SyncChilePublicMarketClient(ticket="secret", http_client=sync_http_client).close()
+    await AsyncChilePublicMarketClient(ticket="secret", http_client=async_http_client).aclose()
+
+    assert not sync_http_client.is_closed
+    assert not async_http_client.is_closed
+    sync_http_client.close()
+    await async_http_client.aclose()

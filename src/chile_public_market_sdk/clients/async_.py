@@ -109,6 +109,8 @@ class AsyncChilePublicMarketClient:
         buyer_code: str | int | None = None,
         supplier_code: str | int | None = None,
     ) -> TenderResponse:
+        """Get tenders by code, date, status, buyer, or supplier."""
+
         if code and any((date, status, buyer_code, supplier_code)):
             raise RequestValidationError("code cannot be combined with other filters.")
         params = {
@@ -129,6 +131,8 @@ class AsyncChilePublicMarketClient:
         buyer_code: str | int | None = None,
         supplier_code: str | int | None = None,
     ) -> PurchaseOrderResponse:
+        """Get purchase orders using every supported v1 filter."""
+
         if code and any((date, status, buyer_code, supplier_code)):
             raise RequestValidationError("code cannot be combined with other filters.")
         params = {
@@ -151,6 +155,8 @@ class AsyncChilePublicMarketClient:
         return ResponseParser.parse_model(CompanyResponse, payload)
 
     async def get_buyers(self) -> CompanyResponse:
+        """List every buyer organization registered in Mercado Público."""
+
         return ResponseParser.parse_model(CompanyResponse, await self._v1(V1_BUYERS_PATH, {}))
 
     async def get_agile_purchases(
@@ -169,6 +175,8 @@ class AsyncChilePublicMarketClient:
         page_number: int = 1,
         sort_by: AgilePurchaseSort | str = AgilePurchaseSort.LAST_MODIFIED,
     ) -> AgilePurchasePage:
+        """List Agile Purchases with filters and pagination."""
+
         if last_change_ttl_ms is not None and (
             changed_from is not None or changed_until is not None
         ):
@@ -221,6 +229,8 @@ class AsyncChilePublicMarketClient:
         return envelope.payload
 
     async def get_agile_purchase(self, code: str) -> AgilePurchaseDetail:
+        """Get the complete details for one Agile Purchase."""
+
         if not code.strip():
             raise RequestValidationError("code cannot be empty.")
         envelope_type = AgileEnvelope[AgilePurchaseDetail]

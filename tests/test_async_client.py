@@ -8,6 +8,7 @@ import httpx
 import pytest
 
 from chile_public_market_sdk import AsyncChilePublicMarketClient
+from chile_public_market_sdk.errors import APIError, RequestValidationError
 
 FIXTURES = Path(__file__).parent / "fixtures" / "contracts"
 
@@ -58,4 +59,75 @@ async def test_async_agile_purchase_routes(agile_page_payload: dict[str, Any]) -
 
     assert (await client.get_agile_purchases()).pagination.total_results == 1
     assert (await client.get_agile_purchase("1057539-228-COT26")).code
+    await http_client.aclose()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("method_name", ["get_tenders", "get_purchase_orders"])
+async def test_async_v1_code_rejects_additional_filters(method_name: str) -> None:
+    http_client = httpx.AsyncClient(
+        transport=httpx.MockTransport(lambda request: httpx.Response(500))
+    )
+    client = AsyncChilePublicMarketClient(ticket="secret", http_client=http_client)
+
+    with pytest.raises(RequestValidationError, match="code cannot be combined"):
+        await getattr(client, method_name)(code="code", date="01012026")
+
+    await http_client.aclose()
+
+
+@pytest.mark.asyncio
+async def test_async_rejects_empty_resource_identifiers() -> None:
+    http_client = httpx.AsyncClient(
+        transport=httpx.MockTransport(lambda request: httpx.Response(500))
+    )
+    client = AsyncChilePublicMarketClient(ticket="secret", http_client=http_client)
+
+    with pytest.raises(RequestValidationError, match="tax_id cannot be empty"):
+        await client.find_supplier(" ")
+    with pytest.raises(RequestValidationError, match="code cannot be empty"):
+        await client.get_agile_purchase(" ")
+
+    await http_client.aclose()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("kwargs", "message"),
+    [
+        ({"last_change_ttl_ms": 1, "changed_from": "2026-01-01"}, "last_change_ttl_ms"),
+        ({"external_id": "code", "query": "text"}, "mutually exclusive"),
+        ({"page_size": 9}, "page_size"),
+        ({"page_number": 0}, "page_number"),
+        ({"regions": [17]}, "region"),
+    ],
+)
+async def test_async_agile_purchase_rejects_invalid_filters(
+    kwargs: dict[str, Any],
+    message: str,
+) -> None:
+    http_client = httpx.AsyncClient(
+        transport=httpx.MockTransport(lambda request: httpx.Response(500))
+    )
+    client = AsyncChilePublicMarketClient(ticket="secret", http_client=http_client)
+
+    with pytest.raises(RequestValidationError, match=message):
+        await client.get_agile_purchases(**kwargs)
+
+    await http_client.aclose()
+
+
+@pytest.mark.asyncio
+async def test_async_agile_purchase_requires_payload() -> None:
+    async def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json={"success": "OK", "payload": None})
+
+    http_client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+    client = AsyncChilePublicMarketClient(ticket="secret", http_client=http_client)
+
+    with pytest.raises(APIError, match="without a payload"):
+        await client.get_agile_purchases()
+    with pytest.raises(APIError, match="without a payload"):
+        await client.get_agile_purchase("1057539-228-COT26")
+
     await http_client.aclose()

@@ -6,7 +6,11 @@ from inspect import signature
 import chile_public_market_sdk
 from chile_public_market_sdk import (
     AsyncChilePublicMarketClient,
+    AsyncChilePublicMarketSDK,
+    ClientConfig,
     SyncChilePublicMarketClient,
+    SyncChilePublicMarketSDK,
+    models,
 )
 from chile_public_market_sdk.clients import (
     AsyncChilePublicMarketClient as CanonicalAsyncClient,
@@ -65,6 +69,28 @@ EXPECTED_RESOURCE_METHODS = {
     "get_agile_purchase": ("self", "code"),
 }
 
+EXPECTED_CONSTRUCTOR_PARAMETERS = {
+    SyncChilePublicMarketClient: ("ticket", "config", "http_client", "timeout"),
+    AsyncChilePublicMarketClient: ("ticket", "config", "http_client", "timeout"),
+    SyncChilePublicMarketSDK: ("ticket", "config", "http_client", "timeout"),
+    AsyncChilePublicMarketSDK: ("ticket", "config", "http_client", "timeout"),
+    ClientConfig: ("ticket", "ticket_env", "base_url_v1", "base_url_v2", "timeout"),
+}
+
+EXPECTED_MODEL_EXPORTS = {
+    "AgileEnvelope",
+    "AgileError",
+    "AgilePurchaseDetail",
+    "AgilePurchasePage",
+    "AgilePurchaseSummary",
+    "Company",
+    "CompanyResponse",
+    "PurchaseOrder",
+    "PurchaseOrderResponse",
+    "Tender",
+    "TenderResponse",
+}
+
 
 def test_top_level_public_exports_are_stable() -> None:
     assert set(chile_public_market_sdk.__all__) == EXPECTED_TOP_LEVEL_EXPORTS
@@ -81,9 +107,15 @@ def test_sync_and_async_resource_surfaces_match_snapshot() -> None:
         assert actual == EXPECTED_RESOURCE_METHODS
 
 
+def test_public_constructor_and_model_exports_are_stable() -> None:
+    for public_type, expected_parameters in EXPECTED_CONSTRUCTOR_PARAMETERS.items():
+        assert tuple(signature(public_type).parameters) == expected_parameters
+
+    assert set(models.__all__) == EXPECTED_MODEL_EXPORTS
+
+
 def test_runtime_version_matches_distribution_metadata() -> None:
     assert chile_public_market_sdk.__version__ == version("mercado-publico-chile-sdk")
-    assert chile_public_market_sdk.__version__ == "0.9.2"
 
 
 def test_models_serialize_with_English_field_names() -> None:
