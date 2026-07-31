@@ -1,7 +1,14 @@
 # Chile Public Market SDK
 
+[![codecov](https://codecov.io/gh/ezer-mackenzie/chile-public-market-sdk/graph/badge.svg)](https://codecov.io/gh/ezer-mackenzie/chile-public-market-sdk)
+
 Unofficial, typed, synchronous and asynchronous Python SDK for Chile's
 [Mercado Público APIs](https://www.chilecompra.cl/api/).
+
+> [!WARNING]
+> This is an unofficial, community-driven initiative. It is not developed,
+> endorsed, or supported by ChileCompra or Mercado Público. Consumers remain
+> responsible for validating its behavior against the official API contracts.
 
 > Status: stable (`1.0.0`). The upstream services include legacy contracts and
 > may add fields. Models validate known fields while preserving new ones.
