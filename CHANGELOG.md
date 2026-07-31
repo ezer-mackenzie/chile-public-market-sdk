@@ -7,6 +7,14 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.9.2] - 2026-07-31
+
+### Changed
+
+- Simplified the immutable wire-key mapping to one typed
+  `Final[Mapping[str, str]]` declaration.
+- Removed temporary map construction, `update()`, and cleanup operations.
+
 ## [0.9.1] - 2026-07-31
 
 ### Changed
