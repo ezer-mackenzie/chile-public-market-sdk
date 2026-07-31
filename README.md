@@ -21,7 +21,7 @@ Unofficial, typed, synchronous and asynchronous Python SDK for Chile's
 ## Installation
 
 ```bash
-pip install mercado-publico-chile-sdk
+pip install chile-public-market-sdk
 ```
 
 ## Secure configuration

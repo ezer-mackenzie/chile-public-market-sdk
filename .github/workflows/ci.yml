@@ -107,7 +107,7 @@ jobs:
         run: >-
           python -c "from importlib.metadata import version;
           import chile_public_market_sdk as sdk;
-          assert sdk.__version__ == version('mercado-publico-chile-sdk');
+          assert sdk.__version__ == version('chile-public-market-sdk');
           assert sdk.SyncChilePublicMarketClient;
           assert sdk.AsyncChilePublicMarketClient"
 

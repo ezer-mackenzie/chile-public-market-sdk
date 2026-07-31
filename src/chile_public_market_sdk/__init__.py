@@ -39,6 +39,6 @@ __all__ = [
 ]
 
 try:
-    __version__ = version("mercado-publico-chile-sdk")
+    __version__ = version("chile-public-market-sdk")
 except PackageNotFoundError:  # pragma: no cover - source tree without installation
     __version__ = "0.0.0+unknown"
