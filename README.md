@@ -1,7 +1,10 @@
 # Chile Public Market SDK
 
-[![Codecov](https://codecov.io/gh/ezer-mackenzie/chile-public-market-sdk/graph/badge.svg)](https://codecov.io/gh/ezer-mackenzie/chile-public-market-sdk)
-[![Publish to PyPI](https://github.com/ezer-mackenzie/chile-public-market-sdk/actions/workflows/publish.yml/badge.svg)](https://github.com/ezer-mackenzie/chile-public-market-sdk/actions/workflows/publish.yml)
+[![CI](https://github.com/ezer-mackenzie/chile-public-market-sdk/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ezer-mackenzie/chile-public-market-sdk/actions/workflows/ci.yml)
+[![Codecov](https://codecov.io/gh/ezer-mackenzie/chile-public-market-sdk/graph/badge.svg?branch=main)](https://codecov.io/gh/ezer-mackenzie/chile-public-market-sdk)
+[![Documentation](https://readthedocs.org/projects/chile-public-market-sdk/badge/?version=latest)](https://chile-public-market-sdk.readthedocs.io/en/latest/)
+[![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13%20%7C%203.14-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![PyPI](https://img.shields.io/pypi/v/chile-public-market-sdk.svg?logo=pypi&logoColor=white)](https://pypi.org/project/chile-public-market-sdk/)
 
 Unofficial, typed, synchronous and asynchronous Python SDK for Chile's
 [Mercado Público APIs](https://www.chilecompra.cl/api/).
@@ -11,7 +14,7 @@ Unofficial, typed, synchronous and asynchronous Python SDK for Chile's
 > endorsed, or supported by ChileCompra or Mercado Público. Consumers remain
 > responsible for validating its behavior against the official API contracts.
 
-> Status: stable (`1.0.0`). The upstream services include legacy contracts and
+> Status: stable (`1.0.1`). The upstream services include legacy contracts and
 > may add fields. Models validate known fields while preserving new ones.
 
 ## Requirements
